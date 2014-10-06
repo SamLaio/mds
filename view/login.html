@@ -1,0 +1,10 @@
+<input type ="text" id = 'acc' />
+<input type ='password' id ='pswd' />
+<input type ='button' onclick = 'userck()'/>
+
+<script>
+	function userck(){
+		$.post('login/UserCk?cgi=true',{'account': $('#acc').val(),'pswd': $('#pswd').val()});
+		//alert('1');
+	}
+</script>

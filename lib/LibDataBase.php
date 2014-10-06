@@ -2,7 +2,7 @@
 
 class LibDataBase {
 	public $dbtype, $dbhost,$dbuser,$dbpass,$dbname,$table;
-	public $sql_count = 0;
+	public $count = 0;
 	public $install = false;
 
 	//共用function
@@ -132,7 +132,9 @@ class LibDataBase {
 		return $this->ValDecode(query);
 	}
 
-	public function Assoc($sql) {
+	public function Assoc($sql,$field = false, $req = false, $or_by = false, $limit = false) {
+		if($field)
+			$sql = $this->Select($sql,$field, $req, $or_by, $limit);
 		$link = $this->Link();
 		$re = $link->query($sql);
 		$re->setFetchMode(PDO::FETCH_ASSOC);
@@ -141,6 +143,7 @@ class LibDataBase {
 		$link = null;
 		return $this->ValDecode($re);
 	}
+			
 	private function html_decode($body){
 		$body = str_replace ( '@&4', ">", $body);
 		$body = str_replace ( '@&3', "<", $body);

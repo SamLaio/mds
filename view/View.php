@@ -4,6 +4,8 @@ class View {
 	function __construct($page) {
 		include_once 'hand.html';
 		//include $page.'.html';
+		if(!isset($_SESSION['UserId']) and $page != 'login')
+			header('Location: login');
 		echo $this->getBody('view/'.$page.'.html');
 		if($this->isPw){
 			echo $this->PwEnCode();

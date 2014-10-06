@@ -1,3 +1,4 @@
 <?php
 $DbType = 'sqlite';
-$DbName = 'model/mymvc.db';
+$DbName = 'model/mds.db';
+?>
