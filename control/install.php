@@ -30,7 +30,7 @@ class install {
 		if(isset($arr['DbAdPw']) and $arr['DbAdPw'] != '')
 			$str .= '$'."DbPw = '".$arr['DbAdPw']."';\n";
 		//mysql
-		$str = "<?php\n".$str."";
+		$str = "<?php\n".$str."\n?>";
 		$fp = fopen('lib/Config.php','w+');
 		fwrite($fp,$str);
 		fclose($fp);

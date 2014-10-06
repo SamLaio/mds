@@ -8,14 +8,15 @@ class login {
 	}
 	
 	public function UserCk($arr){
-		$account = $this->db->UserCk('user','*',"account = '".$arr['post']['account']."' and pswd = '".md5($arr['post']['pswd'])."'");
+		$account = $this->db->UserCk($arr);
 		if($account){
 			if($account['status'] == 1){
 				$_SESSION['UserId'] = $account['seq'];
 				$_SESSION['UserName'] = $account['name'];
+				echo 1;
 			}
 		}else{
-			
+			echo 0;
 		}
 	}
 }
