@@ -2,15 +2,12 @@
 
 class LibBoot {
 	function __construct($url) {
-		if(!isset($_SESSION))
-			session_start();
-		include 'LibDataBase.php';
+		if(isset($url[2]) and $url[2] != '' and $url[2] == 'cgi'){
+			$url[2] = $url[3];
+			$url[3] = $url[4];
+		}
 		$view = (isset($url[2]) and $url[2] != '') ? $this->FileCk(SCANDIR('view'), $url[2]) : 'index';
 		$control = (isset($url[2]) and $url[2] != '') ? $this->FileCk(SCANDIR('control'), $url[2]) : 'index';
-		if(!file_exists('lib/Config.php')){
-			$control = 'install';
-			$view = $control;
-		}
 		if(isset($_SESSION['PwHand'])){
 			$_SESSION['DePwHand'] = $_SESSION['PwHand'];
 		}
@@ -19,20 +16,23 @@ class LibBoot {
 		}
 		$data['get'] = $this->InDataCk($_GET);
 		$data['post'] = $this->InDataCk($_POST);
+
 		include "control/$control.php";
 		$ControlObj = new $control;
+		$PageData = false;
 		if (isset($url[3]) and $url[3] != '') {
 			$url[3] = explode('?', $url[3]);
 			$url[3] = $url[3][0];
 			if (method_exists($ControlObj, $url[3])) {
 				if (count($data['get']) != 0 or count($data['post']) != 0){
-					$ControlObj->{$url[3]}($data);
+					$PageData=$ControlObj->{$url[3]}($data);
 				}else{
-					$ControlObj->{$url[3]}();
+					$PageData=$ControlObj->{$url[3]}();
 				}
 			}
 		}
-		if($view == $control and !isset($data['get']['cgi'])){
+		if($view == $control and !(isset($data['get']['cgi']) or isset($url[4]))){
+			$view = array('page'=>$view,'data'=>$PageData);
 			include "view/View.php";
 			$ViewObj = new View($view);
 		}
@@ -46,6 +46,7 @@ class LibBoot {
 
 	private function FileCk($arr, $file_name) {
 		$ret = 'error';
+		//print_r($arr);
 		foreach ($arr as $value) {
 			if (substr($value, 0, strrpos($value, ".")) == $file_name)
 				$ret = $file_name;

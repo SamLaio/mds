@@ -1,5 +1,4 @@
 <?php
-
 class LibDataBase {
 	public $dbtype, $dbhost,$dbuser,$dbpass,$dbname,$table;
 	public $count = 0;
@@ -7,24 +6,15 @@ class LibDataBase {
 
 	//共用function
 	function __construct() {
-		if(file_exists('lib/Config.php')){
-			include_once 'lib/Config.php';
-			if ( !isset($DbType) ) {
-				$this->install = true;
-			}else{
-				$this->dbtype = $DbType;
-				if ($DbType == 'mysql') {
-					$this->dbhost = $DbHost;
-					$this->dbuser = $DbUser;
-					$this->dbpass = $DbPw;
-					$this->dbname = $DbName;
-				}
-				if ($DbType == 'sqlite') {
-					$this->dbname = $DbName;
-				}
-			}
-		}else{
-			$this->install = true;
+		$this->dbtype = DbType;
+		if (DbType == 'mysql') {
+			$this->dbhost = DbHost;
+			$this->dbuser = DbUser;
+			$this->dbpass = DbPw;
+			$this->dbname = DbName;
+		}
+		if (DbType == 'sqlite') {
+			$this->dbname = DbName;
 		}
 	}
 	protected function comb($sub1, $sub2) {
@@ -43,6 +33,7 @@ class LibDataBase {
 		//test link add by Sam 20140805
 		$link = false;
 		if ($this->dbtype == 'mysql' and !$this->chkservice($this->dbhost, 3306)) {
+			
 			$to_host = $this->dbhost;
 			$to_user = $this->dbuser;
 			$to_pass = $this->dbpass;
@@ -54,14 +45,16 @@ class LibDataBase {
 			);
 		}
 		if ($this->dbtype == 'sqlite') {
-			//echo $this -> dbname;
+			//echo $this -> dbname;exit;
 			$link = new PDO("sqlite:" . $this->dbname);
 		}
 		//test link add by Sam 20140805
 		if($link)
 			return $link;
-		else
+		else{
 			echo 'DB link is false.';
+			exit;
+		}
 	}
 
 	//測試連線
@@ -117,6 +110,7 @@ class LibDataBase {
 	//語法組合 end
 	//sql執行
 	public function Query($sql) {
+		//echo $sql;
 		$link = $this->Link();
 		$link->query($sql);
 		$link = null;
@@ -124,9 +118,9 @@ class LibDataBase {
 
 	public function Fetch($sql) {
 		$link = $this->Link();
-		$this->sql_count = 0;
+		$this->count = 0;
 		$query = $link->query($sql);
-		$this->sql_count = count($query);
+		$this->count = count($query);
 		$query = $query->fetchAll();
 		$link = null;
 		return $this->ValDecode(query);
@@ -135,11 +129,12 @@ class LibDataBase {
 	public function Assoc($sql,$field = false, $req = false, $or_by = false, $limit = false) {
 		if($field)
 			$sql = $this->Select($sql,$field, $req, $or_by, $limit);
+		//echo $sql;exit;
 		$link = $this->Link();
 		$re = $link->query($sql);
 		$re->setFetchMode(PDO::FETCH_ASSOC);
 		$re = $re->fetchAll();
-		$this->sql_count = count($re);
+		$this->count = count($re);
 		$link = null;
 		return $this->ValDecode($re);
 	}

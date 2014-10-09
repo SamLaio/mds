@@ -4,7 +4,7 @@
 
 <script>
 	function userck(){
-		$.post('login/UserCk?cgi=true',{'account': $('#acc').val(),'pswd': $('#pswd').val()},function(e){if(e==1)local.href='index';});
+		$.post('cgi/login/UserCk',{'account': $('#acc').val(),'pswd': $('#pswd').val()},function(e){if(e==1)document.location.href='<?php echo $_SESSION['SiteUrl']; ?>index';});
 		//alert('1');
 	}
 </script>

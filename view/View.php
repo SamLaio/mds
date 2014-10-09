@@ -2,12 +2,11 @@
 class View {
 	private $isPw = false;
 	function __construct($page) {
+		//$view = array('page'=>$view,'data'=>$PageData);
+		$hand=$this->Hand();
 		include_once 'hand.html';
-		//include $page.'.html';
-		if(!isset($_SESSION['UserId']) and $page != 'login')
-			header('Location: login');
-		echo $this->getBody('view/'.$page.'.html');
-		if($this->isPw){
+		include "view/".$page['page'].".html";
+		if($this->getBody("view/".$page['page'].".html")){
 			echo $this->PwEnCode();
 		}
 		include_once 'foot.html';
@@ -62,20 +61,30 @@ class View {
 </script>";
 	}
 	private function getBody($filename){
-		$str = "";
+		$re=false;
 		if(file_exists($filename)){
 			$file = fopen($filename, "r");
 			if($file != NULL){
 				while (!feof($file)) {
-					$tmp = fgets($file);
-					if(stristr ($tmp,'password')){
-						$this->isPw = true;
+					if(stristr (fgets($file),'password')){
+						$re = true;
 					}
-					$str .= $tmp;
 				}
 				fclose($file);
 			}
 		}
-		return $str;
+		return $re;
+	}
+
+	public function Hand($AdTitile=false){
+		//if(isset($_SESSION['UserId']))
+		if($AdTitile)
+			$_SESSION['SiteName'] .= '-'.$AdTitile;
+		if(isset($_SESSION['UserId'])){
+			$re['Login'] = "<span class='link' onclick=\"$.post('".$_SESSION['SiteUrl']."cgi/login/Logout',function(){document.location.href='".$_SESSION['SiteUrl']."index';});\">Logout</span>";
+		}else{
+			$re['Login'] = "<span class='link' onclick=\"document.location.href='".$_SESSION['SiteUrl']."login'; \">Login</span>";
+		}
+		return $re;
 	}
 }
