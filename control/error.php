@@ -1,12 +1,7 @@
 <?php
 class error extends LibDataBase {
 
-	function __construct() {
+	function __construct($id) {
 		
 	}
-
-	public function error($id = false) {
-		
-	}
-
 }

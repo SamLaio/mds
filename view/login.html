@@ -4,7 +4,14 @@
 
 <script>
 	function userck(){
-		$.post('cgi/login/UserCk',{'account': $('#acc').val(),'pswd': $('#pswd').val()},function(e){if(e==1)document.location.href='<?php echo $_SESSION['SiteUrl']; ?>index';});
+		$.post('cgi/login/UserCk',{'account': $('#acc').val(),'pswd': $('#pswd').val()},
+			function(e){
+				if(e==1){
+					document.location.href='<?php echo $_SESSION['SiteUrl']; ?>index';
+				}else{
+					alert('Login Error!');
+				}
+			});
 		//alert('1');
 	}
 </script>
