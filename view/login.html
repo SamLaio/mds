@@ -3,6 +3,13 @@
 <input type ='button' onclick = 'userck()'/>
 
 <script>
+	$(window).ready(function(){
+		$('#acc, #pswd').on("keydown", function (e) {
+			//-- 13 > Enter鍵 || 9 > Tab鍵
+			if (e.which == 13)
+				userck();
+		});
+	});
 	function userck(){
 		$.post('cgi/login/UserCk',{'account': $('#acc').val(),'pswd': $('#pswd').val()},
 			function(e){

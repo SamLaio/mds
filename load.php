@@ -20,7 +20,7 @@ if(!file_exists('lib/Config.php') and !strpos($_SERVER['REQUEST_URI'],'install')
 	if(isset($DbName))
 		define('DbName', $DbName);
 	//echo DbName;
-	if(!isset($_SESSION['SiteName']) or !isset($_SESSION['SiteUrl'])){
+	if(!isset($_SESSION['SiteName']) or !isset($_SESSION['SiteUrl']) or !isset($_SESSION['SiteLang'])){
 		include 'model/load.php';
 		$Load = new Load;
 	}
