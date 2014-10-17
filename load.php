@@ -6,8 +6,6 @@ include_once 'lib/LibDataBase.php';
 if(!file_exists('lib/Config.php') and !strpos($_SERVER['REQUEST_URI'],'install')){
 	header('Location: install');
 }else if(file_exists('lib/Config.php')){
-	if(strpos($_SERVER['REQUEST_URI'],'install'))
-		header('Location: index');
 	include 'lib/config.php';
 	if(isset($DbType))
 		define('DbType', $DbType);
@@ -19,10 +17,11 @@ if(!file_exists('lib/Config.php') and !strpos($_SERVER['REQUEST_URI'],'install')
 		define('DbPw', $DbPw);
 	if(isset($DbName))
 		define('DbName', $DbName);
-	//echo DbName;
-	if(!isset($_SESSION['SiteName']) or !isset($_SESSION['SiteUrl']) or !isset($_SESSION['SiteLang'])){
-		include 'model/load.php';
-		$Load = new Load;
+	// echo DbType;
+	include 'model/load.php';
+	$Load = new Load;
+	if(strpos($_SERVER['REQUEST_URI'],'install')){
+		header('Location: index');
 	}
 }
 /*
@@ -31,5 +30,13 @@ if(!file_exists('lib/Config.php') and !strpos($_SERVER['REQUEST_URI'],'install')
 					$this->dbpass = $DbPw;
 					$this->dbname = $DbName;
  */
-//echo $_SERVER['REQUEST_URI'];
-$boot = new LibBoot(explode('/', $_SERVER['REQUEST_URI']));
+$baseUrl = explode('/',$_SERVER['PHP_SELF']);
+$ck = false;
+$url = array();
+foreach($baseUrl as $baseK => $baseV){
+	if($ck)
+		$url[] = $baseV;
+	if($baseV == 'load.php')
+		$ck = true;
+}
+$boot = new LibBoot($url);

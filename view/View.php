@@ -1,12 +1,10 @@
 <?php
 class View {
 	private $isPw = false;
-	function __construct($page) {
-		//$view = array('page'=>$view,'data'=>$PageData);
-		$hand=$this->Hand();
-		include_once 'hand.html';
-		include "view/".$page['page'].".html";
-		if($this->getBody("view/".$page['page'].".html")){
+	function __construct($page, $InData) {
+		include_once 'hend.html';
+		include "view/$page.html";
+		if($this->getBody('view/'.$page.'.html')){
 			echo $this->PwEnCode();
 		}
 		include_once 'foot.html';
@@ -72,18 +70,6 @@ class View {
 				}
 				fclose($file);
 			}
-		}
-		return $re;
-	}
-
-	public function Hand($AdTitile=false){
-		//if(isset($_SESSION['UserId']))
-		if($AdTitile)
-			$_SESSION['SiteName'] .= '-'.$AdTitile;
-		if(isset($_SESSION['UserId'])){
-			$re['Login'] = "<span class='link' onclick=\"$.post('".$_SESSION['SiteUrl']."cgi/login/Logout',function(){document.location.href='".$_SESSION['SiteUrl']."index';});\">Logout</span>";
-		}else{
-			$re['Login'] = "<span class='link' onclick=\"document.location.href='".$_SESSION['SiteUrl']."login'; \">Login</span>";
 		}
 		return $re;
 	}

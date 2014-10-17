@@ -1,46 +1,52 @@
 <?php
-
 class LibBoot {
 	function __construct($url) {
-		if(isset($url[2]) and $url[2] != '' and $url[2] == 'cgi'){
-			$url[2] = $url[3];
-			$url[3] = $url[4];
+		// print_r($url);exit;
+		if(isset($url[0]) and $url[0] == 'cgi'){
+			$CGI = true;
+			$url[0] = (isset($url[1]))? $url[1]: 'index';
+			$url[1] = (isset($url[2]))? $url[2]: 'index';
+			//$url[0] = (!isset($url[0]) or $url[0] == '')?'index':$url[0];
+			//$url[1] = (!isset($url[1]) or $url[1] == '')?'index':$url[1];
+			//$view = $this->FileCk(SCANDIR('view/'.$url[0]), $url[1]);
+			// echo $url[0];
+			$control = $this->FileCk(SCANDIR('control'), $url[0]);
+		}else{
+			$CGI = false;
+			$url[0] = (!isset($url[0]) or $url[0] == '')?'index':$url[0];
+			$url[1] = (!isset($url[1]) or $url[1] == '')?'index':$url[1];
+			$view = $this->FileCk(SCANDIR('view/'.$url[0]), $url[1]);
+			$control = $this->FileCk(SCANDIR('control'), $url[0]);
 		}
-		$view = (isset($url[2]) and $url[2] != '') ? $this->FileCk(SCANDIR('view'), $url[2]) : 'index';
-		$control = (isset($url[2]) and $url[2] != '') ? $this->FileCk(SCANDIR('control'), $url[2]) : 'index';
-		if($view == $control and $view == 'error'){
-			
-		}
+		/*$url[0] = (!isset($url[0]) or $url[0] == '')?'index':$url[0];
+		$url[1] = (!isset($url[1]) or $url[1] == '')?'index':$url[1];
+		$view = $this->FileCk(SCANDIR('view/'.$url[0]), $url[1]);
+		$control = $this->FileCk(SCANDIR('control'), $url[0]);*/
 		if(isset($_SESSION['PwHand'])){
 			$_SESSION['DePwHand'] = $_SESSION['PwHand'];
 		}
 		if(isset($_SESSION['PwEnCode'])){
 			$_SESSION['DePwEnCode'] = $_SESSION['PwEnCode'];
 		}
-		if(count($_GET) != 0)
-			$data['get'] = $this->InDataCk($_GET);
-		if(count($_POST) != 0)
-			$data['post'] = $this->InDataCk($_POST);
-		
+		$data['get'] = $this->InDataCk($_GET);
+		$data['post'] = $this->InDataCk($_POST);
 		include "control/$control.php";
 		$ControlObj = new $control;
-		$PageData = false;
-		if (isset($url[3]) and $url[3] != '') {
-			$url[3] = explode('?', $url[3]);
-			$url[3] = $url[3][0];
-			if (method_exists($ControlObj, $url[3])) {
-				if (count($_GET) != 0 or count($_POST) != 0){
-					$PageData=$ControlObj->{$url[3]}($data);
-				}else{
-					$PageData=$ControlObj->{$url[3]}();
-				}
-			}
+
+		$ControlRet = false;
+		if (method_exists($ControlObj, $url[1])) {
+			$ControlRet = (count($data['get']) != 0 or count($data['post']) != 0)? $ControlObj->{$url[1]}($data): $ControlObj->{$url[1]}();
 		}
-		if($view == $control and !(isset($data['get']['cgi']) or isset($url[4]))){
-			$view = array('page'=>$view,'data'=>$PageData);
+		
+		if(!$CGI){
+			include "view/View.php";
+			$ViewObj = new View($control.'/'.$view,$ControlRet);
+		}
+		/*if($view == $control and !isset($data['get']['cgi'])){
 			include "view/View.php";
 			$ViewObj = new View($view);
 		}
+		*/
 		if(isset($_SESSION['DePwEnCode'])){
 			unset($_SESSION['DePwEnCode']);
 		}

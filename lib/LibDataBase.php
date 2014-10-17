@@ -33,7 +33,6 @@ class LibDataBase {
 		//test link add by Sam 20140805
 		$link = false;
 		if ($this->dbtype == 'mysql' and !$this->chkservice($this->dbhost, 3306)) {
-			
 			$to_host = $this->dbhost;
 			$to_user = $this->dbuser;
 			$to_pass = $this->dbpass;
@@ -47,6 +46,7 @@ class LibDataBase {
 		if ($this->dbtype == 'sqlite') {
 			//echo $this -> dbname;exit;
 			$link = new PDO("sqlite:" . $this->dbname);
+			if (!$link) die ($error);
 		}
 		//test link add by Sam 20140805
 		if($link)
@@ -110,7 +110,6 @@ class LibDataBase {
 	//語法組合 end
 	//sql執行
 	public function Query($sql) {
-		//echo $sql;
 		$link = $this->Link();
 		$link->query($sql);
 		$link = null;
@@ -131,6 +130,7 @@ class LibDataBase {
 			$sql = $this->Select($sql,$field, $req, $or_by, $limit);
 		//echo $sql;exit;
 		$link = $this->Link();
+		//print_r($link);exit;
 		$re = $link->query($sql);
 		$re->setFetchMode(PDO::FETCH_ASSOC);
 		$re = $re->fetchAll();
