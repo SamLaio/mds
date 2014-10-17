@@ -1,8 +1,9 @@
-<input type ="text" id = 'acc' />
-<input type ='password' id ='pswd' /><br />
-<img src = '<?php echo $_SESSION['SiteUrl']; ?>cgi/captcha/ImgPut' /><br />
+<span class = 'Lang_account'></span><input type ="text" id = 'acc' />
+<span class = 'Lang_password'></span><input type ='password' id ='pswd' /><br />
+<span class = 'Lang_captcha'></span><br />
+<img src = '<?php echo $_SESSION['SiteUrl']; ?>cgi/captcha/ImgPut' />
 <input type ='text' id = 'captcha' />
-<input type ='button' onclick = 'userck()'/>
+<input type ='button' class = 'Lang_submit' onclick = 'userck()'/>
 
 <script>
 	$(window).ready(function(){

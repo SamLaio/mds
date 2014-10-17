@@ -1,13 +1,15 @@
+body {
+	font-size:3em;
+}
 #hender {
+	text-align:right;
 	height:30%;
 	background-color:#00ff00;
 }
 #footer {
+	text-align:right;
 	height:30%;
 	background-color:#00ff00;
-}
-#hend #login {
-
 }
 
 .link{

@@ -7,12 +7,22 @@
 	<body>
 		<script src="lib/js/jquery.min.js"></script>
 		<script src="lib/js/LibJs.js"></script>
+		
 		<link href="css/base.css" rel="stylesheet">
+		<script src="lib/js/LibJs.js"></script>
+<?php
+	if(file_exists('lib/Config.php')){
+?>
+		<script src="view/lang/<?php echo $_SESSION['SiteLang'];?>.php"></script>
 		<div id = 'hender'>
+			[<span id = 'goIndex' class = 'link'><span class = 'Lang_goIndex'></span></span>]
 <?php
 	if(!isset($_SESSION['UserId']))
-		echo "\t\t\t[<span id = 'login' class = 'link'>login</span>]\n";
+		echo "\t\t\t[<span id = 'login' class = 'link'><span class = 'Lang_login'></span></span>]\n";
 	else
-		echo "\t\t\t[<span id = 'logout' class = 'link'>logout</span>]\n";
+		echo "\t\t\t[<span id = 'logout' class = 'link'><span class = 'Lang_logout'></span></span>]\n";
 ?>
 		</div>
+<?php
+	}
+?>

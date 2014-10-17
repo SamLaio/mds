@@ -51,6 +51,6 @@ class install {
 		fclose($fp);
 		include 'model/install.php';
 		$this->installObj = new InstallModel;
-		$this->installObj->St1(array('AdName'=>$arr['AdName'],'AdPw'=>$arr['AdPw'],'SiteName'=>$arr['SiteName'],'SiteUrl'=>$arr['SiteUrl']));
+		$this->installObj->St1(array('AdName'=>$arr['AdName'],'AdPw'=>$arr['AdPw'],'SiteName'=>$arr['SiteName'],'SiteUrl'=>$arr['SiteUrl'],'SiteLang'=>$arr['SiteLang']));
 	}
 }

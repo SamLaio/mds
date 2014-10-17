@@ -1,6 +1,5 @@
 <?php
 class ModelLogin extends LibDataBase {
-
 	function __construct() {
 		parent::__construct();
 		if(isset($_SESSION['UserId']))
