@@ -1,5 +1,16 @@
 <?php
 	$strLang=array(
+		'AdminName'=>array('type'=>'def','val'=>'管理員帳號:'),
+		'AdminPw'=>array('type'=>'def','val'=>'管理員密碼:'),
+		'SiteName'=>array('type'=>'def','val'=>'網站名稱:'),
+		'SiteUrl'=>array('type'=>'def','val'=>'網站網址:'),
+		'SiteLang'=>array('type'=>'def','val'=>'網站語言:'),
+		'DbType'=>array('type'=>'def','val'=>'資料庫類型:'),
+		'DbName'=>array('type'=>'def','val'=>'資料庫名稱:'),
+		'DbHost'=>array('type'=>'def','val'=>'資料庫連線:'),
+		'DbAdame'=>array('type'=>'def','val'=>'資料庫管理員帳號:'),
+		'DbAdPw'=>array('type'=>'def','val'=>'資料庫管理員密碼:'),
+		
 		'account'=>array('type'=>'def','val'=>'帳號:'),
 		'password'=>array('type'=>'def','val'=>'密碼:'),
 		'captcha'=>array('type'=>'def','val'=>'驗證碼:'),

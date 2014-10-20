@@ -1,6 +1,7 @@
 <?php
 class LibBoot {
 	function __construct($url) {
+		// print_r($url);exit;
 		if(isset($url[0]) and $url[0] == 'cgi'){
 			$CGI = true;
 			$url[0] = (isset($url[1]))? $url[1]: 'index';
@@ -10,7 +11,8 @@ class LibBoot {
 			$CGI = false;
 			$url[0] = (!isset($url[0]) or $url[0] == '')?'index':$url[0];
 			$url[1] = (!isset($url[1]) or $url[1] == '')?'index':$url[1];
-			$view = $this->FileCk(SCANDIR('view/'.$url[0]), $url[1]);
+			$view = $this->FileCk(SCANDIR('view'), $url[0],false);
+			$view = $this->FileCk(SCANDIR('view/'.$view), $url[1]);
 			$control = $this->FileCk(SCANDIR('control'), $url[0]);
 		}
 		if(isset($_SESSION['PwHand'])){
@@ -40,11 +42,12 @@ class LibBoot {
 		}
 	}
 
-	private function FileCk($arr, $file_name) {
+	private function FileCk($arr, $file_name, $isFile = true) {
 		$ret = 'error';
-		//print_r($arr);
 		foreach ($arr as $value) {
-			if (substr($value, 0, strrpos($value, ".")) == $file_name)
+			if (substr($value, 0, strrpos($value, ".")) == $file_name and $isFile)
+				$ret = $file_name;
+			else if ($value == $file_name and !$isFile)
 				$ret = $file_name;
 		}
 		return $ret;

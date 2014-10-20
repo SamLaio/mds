@@ -9,9 +9,21 @@ class install {
 				echo '<script>history.back(1);</script>';
 				exit;
 			}
+		}else{
+			$_SESSION['SiteName'] = 'MyMVC';
+			$_SESSION['SiteLang'] = 'en';
 		}
 	}
-	function St1($arr){
+	public function Lang(){
+		$ret = array();
+		foreach(SCANDIR('view/lang') as $value){
+			if (substr($value, 0, strrpos($value, ".php")))
+				$ret[]['lang'] = substr($value, 0, strrpos($value, "."));
+		}
+		echo json_encode($ret);
+		//print_R(SCANDIR('view'));
+	}
+	public function St1($arr){
 		$arr = $arr['post'];
 		//all
 		if(isset($arr['DbType']) and $arr['DbType'] != '')

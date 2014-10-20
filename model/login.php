@@ -11,7 +11,5 @@ class ModelLogin extends LibDataBase {
 			return false;
 		else
 			return $account[0];
-		//
-		//print_r($arr);
 	}
 }
