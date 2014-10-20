@@ -1,5 +1,6 @@
 <?php
 	$strLang=array(
+		'InstallInfo'=>array('type'=>'def','val'=>'Install Info'),
 		'AdminName'=>array('type'=>'def','val'=>'Administrator Name:'),
 		'AdminPw'=>array('type'=>'def','val'=>'Administrator Password:'),
 		'SiteName'=>array('type'=>'def','val'=>'Site Name:'),

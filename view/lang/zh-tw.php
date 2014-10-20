@@ -1,5 +1,6 @@
 <?php
 	$strLang=array(
+		'InstallInfo'=>array('type'=>'def','val'=>'安裝設定'),
 		'AdminName'=>array('type'=>'def','val'=>'管理員帳號:'),
 		'AdminPw'=>array('type'=>'def','val'=>'管理員密碼:'),
 		'SiteName'=>array('type'=>'def','val'=>'網站名稱:'),

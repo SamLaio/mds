@@ -1,18 +1,20 @@
-<span class = 'Lang_AdminName' ></span><input type = 'text' id = 'AdName' /><br />
-<span class = 'Lang_AdminPw' ></span><input type = 'password' id = 'AdPw' /><br />
-<span class = 'Lang_SiteName' ></span><input type = 'text' id = 'SiteName' /><br />
-<span class = 'Lang_SiteUrl' ></span><input type = 'text' id = 'SiteUrl' /><br />
-<span class = 'Lang_SiteLang' ></span><select id = 'SiteLang' /><option value = ''></option></select><br />
-<span class = 'Lang_DbType' ></span><select id = 'DbType'><option value = ''></option><option value = 'sqlite'>Sqlite</option><option value = 'mysql'>MySql</option></select><br />
-<div id ='sql'>
-	<span class = 'Lang_DbName' ></span><input type = 'text' id = 'DbName' /><br />
-	<div id ='mysql'>
-		<span class = 'Lang_DbHost' ></span><input type = 'text' id = 'DbHost' /><br />
-		<span class = 'Lang_DbAdame' ></span><input type = 'text' id = 'DbAdName' /><br />
-		<span class = 'Lang_DbAdPw' ></span><input type = 'password' id = 'DbAdPw' /><br />
+<div id = 'InstallSet' style = 'width:30%;display:inline-block;'>
+	<span class = 'Lang_AdminName' ></span><input type = 'text' id = 'AdName' /><br />
+	<span class = 'Lang_AdminPw' ></span><input type = 'password' id = 'AdPw' /><br />
+	<span class = 'Lang_SiteName' ></span><input type = 'text' id = 'SiteName' /><br />
+	<span class = 'Lang_SiteUrl' ></span><input type = 'text' id = 'SiteUrl' /><br />
+	<span class = 'Lang_SiteLang' ></span><select id = 'SiteLang' /></select><br />
+	<span class = 'Lang_DbType' ></span><select id = 'DbType'><option value = ''></option><option value = 'sqlite'>Sqlite</option><option value = 'mysql'>MySql</option></select><br />
+	<div id ='sql'>
+		<span class = 'Lang_DbName' ></span><input type = 'text' id = 'DbName' /><br />
+		<div id ='mysql'>
+			<span class = 'Lang_DbHost' ></span><input type = 'text' id = 'DbHost' /><br />
+			<span class = 'Lang_DbAdame' ></span><input type = 'text' id = 'DbAdName' /><br />
+			<span class = 'Lang_DbAdPw' ></span><input type = 'password' id = 'DbAdPw' /><br />
+		</div>
 	</div>
+	<input type = 'button' class = 'Lang_submit' onclick ='next()' id = 'next' />
 </div>
-<input type = 'button' class = 'Lang_submit' onclick ='next()' id = 'next' />
 <script>
 var st = 0;
 var AdName,Adpw,DbType,DbHost,DbName,DbAdame,DbAdPw;
@@ -20,9 +22,7 @@ $(window).ready(function(){
 	$('#sql').hide();
 	$('#mysql').hide();
 	$.post('cgi/install/Lang',function(e){
-		//alert(e.length);
 		for(var i = 0; i < e.length; i++){
-			//alert(e[i]['lang']);
 			$('#SiteLang').append("<option value = '"+e[i]['lang']+"'>"+e[i]['lang']+"</option>");
 		}
 	},'json');

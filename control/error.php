@@ -5,8 +5,6 @@ class error extends LibDataBase {
 		
 	}
 
-	public function error($id = false) {
-		
+	public function unfind(){
 	}
-
 }

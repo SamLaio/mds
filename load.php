@@ -4,6 +4,15 @@ if(!isset($_SESSION))
 include_once 'lib/LibBoot.php';
 include_once 'lib/LibDataBase.php';
 if(!file_exists('lib/Config.php') and !strpos($_SERVER['REQUEST_URI'],'install')){
+	$baseUrl = explode('/',$_SERVER['PHP_SELF']);
+	$ck = true;
+	$tmp = array();
+	foreach($baseUrl as $value){
+		if($ck)
+			$tmp[] = $value;
+		if($value == 'load.php' and $ck)
+			$ck = false;
+	}
 	header('Location: install');
 }else if(file_exists('lib/Config.php')){
 	include 'lib/config.php';
