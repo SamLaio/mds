@@ -14,7 +14,7 @@ class LibBoot {
 			$view = $this->FileCk(SCANDIR('view/'.$view), $url[1]);
 			$control = $this->FileCk(SCANDIR('control'), $url[0]);
 		}
-		
+		// exit;
 		if(isset($_SESSION['PwHand'])){
 			$_SESSION['DePwHand'] = $_SESSION['PwHand'];
 		}
@@ -25,12 +25,10 @@ class LibBoot {
 		$data['post'] = $this->InDataCk($_POST);
 		include "control/$control.php";
 		$ControlObj = new $control;
-//print_r($url);exit;
+
 		$ControlRet = false;
 		if (method_exists($ControlObj, $url[1])) {
 			$ControlRet = (count($data['get']) != 0 or count($data['post']) != 0)? $ControlObj->{$url[1]}($data): $ControlObj->{$url[1]}();
-		}else{
-			header('Location: '.$_SESSION['SiteUrl'] . 'error/unfind');
 		}
 		if(!$CGI){
 			include "view/View.php";

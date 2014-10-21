@@ -4,16 +4,21 @@ if(!isset($_SESSION))
 include_once 'lib/LibBoot.php';
 include_once 'lib/LibDataBase.php';
 if(!file_exists('lib/Config.php') and !strpos($_SERVER['REQUEST_URI'],'install')){
-	$baseUrl = explode('/',$_SERVER['PHP_SELF']);
+	header('Location: '.$_SESSION['SiteUrl'].'install');
+}else if(!file_exists('lib/Config.php') and strpos($_SERVER['REQUEST_URI'],'install')){
+	$port = ($_SERVER['SERVER_PORT'] == 80)?'http://':'https://';
+	$_SESSION['SiteUrl'] = explode('/', $_SERVER['PHP_SELF']);
 	$ck = true;
 	$tmp = array();
-	foreach($baseUrl as $value){
+	foreach($_SESSION['SiteUrl'] as $value){
 		if($ck)
 			$tmp[] = $value;
 		if($value == 'load.php' and $ck)
 			$ck = false;
 	}
-	header('Location: install');
+	unset($tmp[count($tmp)-1]);
+	$_SESSION['SiteUrl'] = $port .$_SERVER['HTTP_HOST'].implode('/',$tmp).'/';
+	$_SESSION['SiteName'] = 'MyMVC';
 }else if(file_exists('lib/Config.php')){
 	include 'lib/config.php';
 	if(isset($DbType))
