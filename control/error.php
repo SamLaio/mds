@@ -1,5 +1,5 @@
 <?php
-class error extends LibDataBase {
+class error {
 
 	function __construct() {
 		

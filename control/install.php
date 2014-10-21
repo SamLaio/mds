@@ -6,6 +6,8 @@ class install {
 		if(file_exists('lib/Config.php')){
 			include 'lib/Config.php';
 			if(isset($DbType)){
+				unset($_SESSION['SiteName']);
+				unset($_SESSION['SiteUrl']);
 				echo '<script>history.back(1);</script>';
 				exit;
 			}

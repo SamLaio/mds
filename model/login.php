@@ -6,7 +6,7 @@ class ModelLogin extends LibDataBase {
 			header('Location: index');
 	}
 	public function UserCk($arr){
-		$account = $this->Assoc('user','*',"account = '".$arr['post']['account']."' and pswd = '".md5($arr['post']['pswd'])."'");
+		$account = $this->Assoc('user','*',"account = '".$arr['account']."' and pswd = '".md5($arr['pswd'])."'");
 		if($this->count == 0)
 			return false;
 		else

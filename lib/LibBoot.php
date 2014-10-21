@@ -1,13 +1,21 @@
 <?php
 class LibBoot {
 	function __construct($url) {
-		if(isset($url[0]) and $url[0] == 'cgi'){
-			$CGI = true;
+		$CGI = (isset($url[0]) and $url[0] == 'cgi');
+		$OnlyBody = (isset($url[0]) and $url[0] == 'body');
+		if($CGI and !$OnlyBody){
 			$url[0] = (isset($url[1]))? $url[1]: 'index';
-			$url[1] = (isset($url[2]))? $url[2]: 'index';
+			$url[1] = (isset($url[2]) and $url[2] != '')? $url[2]: 'index';
 			$control = $this->FileCk(SCANDIR('control'), $url[0]);
-		}else{
-			$CGI = false;
+		}
+		if(!$CGI and $OnlyBody){
+			$url[0] = (isset($url[1]))? $url[1]: 'index';
+			$url[1] = (isset($url[2]) and $url[2] != '')? $url[2]: 'index';
+			$view = $this->FileCk(SCANDIR('view'), $url[0],false);
+			$view = $this->FileCk(SCANDIR('view/'.$view), $url[1]);
+			$control = $this->FileCk(SCANDIR('control'), $url[0]);
+		}
+		if(!$CGI and !$OnlyBody){
 			$url[0] = (!isset($url[0]) or $url[0] == '')?'index':$url[0];
 			$url[1] = (!isset($url[1]) or $url[1] == '')?'index':$url[1];
 			$view = $this->FileCk(SCANDIR('view'), $url[0],false);
@@ -31,6 +39,7 @@ class LibBoot {
 			$ControlRet = (count($data['get']) != 0 or count($data['post']) != 0)? $ControlObj->{$url[1]}($data): $ControlObj->{$url[1]}();
 		}
 		if(!$CGI){
+			$ControlRet['OnlyBody']=$OnlyBody;
 			include "view/View.php";
 			$ViewObj = new View($control.'/'.$view,$ControlRet);
 		}

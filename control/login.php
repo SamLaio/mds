@@ -9,19 +9,22 @@ class login {
 	}
 	
 	public function UserCk($arr){
+		$arr = $arr['post'];
 		$account = $this->db->UserCk($arr);
 		if($account){
 			//print_r($account);
 			if($account['status'] == 1){
 				$_SESSION['UserId'] = $account['seq'];
 				$_SESSION['UserName'] = $account['name'];
-				echo 1;
+				
 				unset($_SESSION['PwEnCode']);
 				unset($_SESSION['PwHand']);
 				unset($_SESSION['CaptchaArr']);
 				unset($_SESSION['CaptchaPw']);
 				unset($_SESSION['DePwHand']);
 				unset($_SESSION['DePwEnCode']);
+				
+				echo 1;
 			}else{
 				echo 2;
 			}
@@ -35,4 +38,9 @@ class login {
 		unset($_SESSION['UserName']);
 		echo 1;
 	}
+	
+	/*public function UserTokenCk($arr){
+		$arr = $arr['post'];
+		if(isset($arr['Token']
+	}*/
 }

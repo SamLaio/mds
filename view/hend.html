@@ -2,26 +2,35 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8; width=device-width; initial-scale=1.0" name="viewport"/>
-<title><?php echo $_SESSION['SiteName']; ?></title>
+	<title><?php echo $_SESSION['SiteName']; ?></title>
+	<script src="<?php echo $_SESSION['SiteUrl'];?>lib/js/jquery.min.js"></script>
+	<script src="<?php echo $_SESSION['SiteUrl'];?>lib/js/LibJs.php"></script>
+	<link href="<?php echo $_SESSION['SiteUrl'];?>css/base.css" rel="stylesheet">
+	<script src="<?php echo $_SESSION['SiteUrl'];?>view/lang/<?php echo $_SESSION['SiteLang'];?>.php"></script>
+	<link href="<?php echo $_SESSION['SiteUrl'];?>css/JqueryUI/jquery-ui.css" rel="stylesheet">
+	<script src = '<?php echo $_SESSION['SiteUrl'];?>lib/js/jquery-ui.js'></script>
+	<link href="<?php echo $_SESSION['SiteUrl'];?>css/DataTables/jquery.dataTables.css" rel="stylesheet">
+	<script src = '<?php echo $_SESSION['SiteUrl'];?>lib/js/jquery.dataTables.js'></script>
 </head>
 	<body>
-		<script src="<?php echo $_SESSION['SiteUrl'];?>lib/js/jquery.min.js"></script>
-		<script src="<?php echo $_SESSION['SiteUrl'];?>lib/js/LibJs.js"></script>
-		<link href="<?php echo $_SESSION['SiteUrl'];?>css/base.css" rel="stylesheet">
-		<script src="<?php echo $_SESSION['SiteUrl'];?>view/lang/<?php echo $_SESSION['SiteLang'];?>.php"></script>
-		<div id = 'BodyMain'>
+
+		<div id = 'BodyForm'>
 			<div id = 'hender'>
 <?php
 	if(file_exists('lib/Config.php')){
 ?>
 				[<span id = 'goIndex' class = 'link'><span class = 'Lang_goIndex'></span></span>]
 <?php
-		if(!isset($_SESSION['UserId']))
+		if(!isset($_SESSION['UserId'])){
 			echo "\t\t\t\t[<span id = 'login' class = 'link'><span class = 'Lang_login'></span></span>]\n";
-		else
+		}else{
+			echo "\t\t\t\t[<span id = 'flow' class = 'link'><span class = 'Lang_flow'></span></span>]\n";
+			echo "\t\t\t\t[<span id = 'plan' class = 'link'><span class = 'Lang_plan'></span></span>]\n";
 			echo "\t\t\t\t[<span id = 'logout' class = 'link'><span class = 'Lang_logout'></span></span>]\n";
+		}
 	}else{
 		echo "<div style='text-align:center'><span class = 'Lang_InstallInfo'></span></div>";
 	}
 ?>
 		</div>
+		<div id = 'BodyMain'>
