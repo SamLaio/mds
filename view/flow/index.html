@@ -9,7 +9,7 @@
 			<option value = '+'>+</option>
 			<option value = '-'>-</option>
 		</select>
-		<input type = 'text' id = 'FlowAddAmount' />
+		<input type = 'number' id = 'FlowAddAmount' />
 		<input type = 'text' id = 'FlowAddNote' />
 	</div>
 	[<span class = 'link' id = 'UrlSubmit'>Submit</span>]
@@ -24,7 +24,7 @@ $(window).ready(function(){
 		$('#UrlEditDiv').show();
 	});
 	$('#UrlSubmit').on('click',function(){
-		if($('#FlowAddDate').val() != '' && $('#FlowAddAmount').val() != ''){
+		if($('#FlowAddDate').val() != '' && $('#FlowAddAmount').val() != '' && !isNaN($('#FlowAddAmount').val())){
 			$.post('<?php echo $_SESSION['SiteUrl'];?>cgi/flow/AddFlow',
 				{
 					'FlowAddDate':$('#FlowAddDate').val(),
@@ -32,7 +32,14 @@ $(window).ready(function(){
 					'FlowAddAmount':$('#FlowAddAmount').val(),
 					'FlowAddNote':$('#FlowAddNote').val(),
 				},
-				function(){$('#UrlEditDiv').hide();getFlow();}
+				function(){
+					$('#FlowAddDate').val('');
+					$('#FlowAddType').val('+');
+					$('#FlowAddAmount').val('');
+					$('#FlowAddNote').val('');
+					$('#UrlEditDiv').hide();
+					getFlow();
+				}
 			);
 		}else
 			alert('error');
