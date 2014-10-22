@@ -2,7 +2,6 @@
 class install {
 	private $installObj;
 	function __construct() {
-		//echo 11;
 		if(file_exists('lib/Config.php')){
 			include 'lib/Config.php';
 			if(isset($DbType)){
@@ -23,7 +22,6 @@ class install {
 				$ret[]['lang'] = substr($value, 0, strrpos($value, "."));
 		}
 		echo json_encode($ret);
-		//print_R(SCANDIR('view'));
 	}
 	public function St1($arr){
 		$arr = $arr['post'];
@@ -59,7 +57,7 @@ class install {
 			else
 				define('DbName', $arr['DbName']);
 		}
-		$str = "<?php\n".$str."\n?>";
+		$str = "<?php\n".$str;
 		$fp = fopen('lib/Config.php','w+');
 		fwrite($fp,$str);
 		fclose($fp);

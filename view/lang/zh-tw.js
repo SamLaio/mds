@@ -1,4 +1,4 @@
-var datepickerLang;
+var datepickerDef,dataTableDef;
 var alert_sub;
 $(window).ready(function(){
 	var strLang = new Array(
@@ -44,7 +44,7 @@ $(window).ready(function(){
 			
 		}
 	};
-	datepickerLang={
+	datepickerDef={
 				dayNames:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"],
 				dayNamesMin:["日","一","二","三","四","五","六"],
 				monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
@@ -55,4 +55,17 @@ $(window).ready(function(){
 				showMonthAfterYear:true,
 				dateFormat:"yy-mm-dd"
 			};
+	dataTableDef={
+			"oLanguage":{
+				"sProcessing":"處理中...",
+				 "sLengthMenu":"顯示 _MENU_ 項結果",
+				 "sZeroRecords":"沒有匹配結果",
+				 "sInfo":"顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
+				 "sInfoEmpty":"顯示第 0 至 0 項結果，共 0 項",
+				 "sInfoFiltered":"(從 _MAX_ 項結果過濾)",
+				 "sSearch":"搜索:",
+				 "oPaginate":{"sFirst":"首頁","sPrevious":"上頁","sNext":"下頁","sLast":"尾頁"},
+			},
+			"order": [[ 0, "desc" ]]
+		 };
 });

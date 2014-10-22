@@ -7,17 +7,8 @@ if(!file_exists('lib/Config.php') and !strpos($_SERVER['REQUEST_URI'],'install')
 	header('Location: '.$_SESSION['SiteUrl'].'install');
 }else if(!file_exists('lib/Config.php') and strpos($_SERVER['REQUEST_URI'],'install')){
 	$port = ($_SERVER['SERVER_PORT'] == 80)?'http://':'https://';
-	$_SESSION['SiteUrl'] = explode('/', $_SERVER['PHP_SELF']);
-	$ck = true;
-	$tmp = array();
-	foreach($_SESSION['SiteUrl'] as $value){
-		if($ck)
-			$tmp[] = $value;
-		if($value == 'load.php' and $ck)
-			$ck = false;
-	}
-	unset($tmp[count($tmp)-1]);
-	$_SESSION['SiteUrl'] = $port .$_SERVER['HTTP_HOST'].implode('/',$tmp).'/';
+	$_SESSION['SiteUrl'] = explode('load.php',$_SERVER['PHP_SELF']);
+	$_SESSION['SiteUrl'] = $port . $_SERVER['HTTP_HOST'] . $_SESSION['SiteUrl'][0];
 	$_SESSION['SiteName'] = 'MyMVC';
 }else if(file_exists('lib/Config.php')){
 	include 'lib/config.php';

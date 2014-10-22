@@ -16,6 +16,7 @@ class login {
 			if($account['status'] == 1){
 				$_SESSION['UserId'] = $account['seq'];
 				$_SESSION['UserName'] = $account['name'];
+				$_SESSION['group'] = $account['group'];
 				
 				unset($_SESSION['PwEnCode']);
 				unset($_SESSION['PwHand']);
@@ -36,6 +37,7 @@ class login {
 	public function Logout(){
 		unset($_SESSION['UserId']);
 		unset($_SESSION['UserName']);
+		unset($_SESSION['group']);
 		echo 1;
 	}
 	

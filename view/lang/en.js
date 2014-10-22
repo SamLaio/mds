@@ -1,4 +1,4 @@
-var datepickerLang;
+var datepickerDef,dataTableDef;;
 var alert_sub;
 $(window).ready(function(){
 	var strLang = new Array(
@@ -43,5 +43,6 @@ $(window).ready(function(){
 			'CaptchaNull':'Captcha is NULL or Error!!'
 		}
 	};
-	datepickerLang={showMonthAfterYear:true,dateFormat:"yy-mm-dd"};
+	datepickerDef={showMonthAfterYear:true,dateFormat:"yy-mm-dd"};
+	dataTableDef={"order": [[ 0, "desc" ]]};
 });

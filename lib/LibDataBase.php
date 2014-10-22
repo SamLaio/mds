@@ -86,7 +86,7 @@ class LibDataBase {
 
 	public function In($table, $field, $value) {
 		$field = '(' . $this->comb($field, ', ') . ')';
-		$value = "(" . $this->comb($value, ", ") . ')';
+		$value = "(" . $this->comb($this->ValAddTip($value), ", ") . ')';
 		$sql = "insert into $table $field values $value;";
 		return $sql;
 	}
@@ -128,7 +128,7 @@ class LibDataBase {
 	public function Assoc($sql,$field = false, $req = false, $or_by = false, $limit = false) {
 		if($field)
 			$sql = $this->Select($sql,$field, $req, $or_by, $limit);
-		//echo $sql;exit;
+		// echo $sql;
 		$link = $this->Link();
 		//print_r($link);exit;
 		$re = $link->query($sql);
@@ -138,7 +138,12 @@ class LibDataBase {
 		$link = null;
 		return $this->ValDecode($re);
 	}
-			
+	private function ValAddTip($arr){
+		foreach($arr as $key =>$value){
+			$arr[$key] = "'$value'";
+		}
+		return $arr;
+	}
 	private function html_decode($body){
 		$body = str_replace ( '@&4', ">", $body);
 		$body = str_replace ( '@&3', "<", $body);
