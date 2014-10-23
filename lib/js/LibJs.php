@@ -25,6 +25,6 @@ $(document).ready(function(){
 function PageChange(page){
 	$.post('<?php echo $_SESSION['SiteUrl'];?>body/'+page,function(e){
 		$('#BodyMain').html(e);
-		$("head").append("<scr" + "ipt type=\"text/javascript\" src=\"<?php echo $_SESSION['SiteUrl'];?>view/lang/<?php echo $_SESSION['SiteLang'];?>.js\"></scr" + "ipt>");
+		$("head").append("<scr" + "ipt type=\"text/javascript\" src=\"<?php echo $_SESSION['SiteUrl'];?>js/Lang\"></scr" + "ipt>");
 	});
 }

@@ -17,15 +17,15 @@ class LibDataBase {
 			$this->dbname = DbName;
 		}
 	}
-	protected function comb($sub1, $sub2) {
+	protected function comb($sub2,$arr) {
 		$re = false;
-		if (is_array($sub1)) {
-			$re = implode($sub2,array_values($sub1));
+		if (is_array($arr)) {
+			$re = implode($sub2,array_values($arr));
 		} else {
-			$re = $sub1;
+			$re = $arr;
 		}
-		if(!$re)
-			$re = $this->table;
+		/*if(!$re)
+			$re = $this->table;*/
 		return $re;
 	}
 
@@ -75,34 +75,37 @@ class LibDataBase {
 	//共用function end
 	//語法組合
 	public function Select($table, $field, $req = false, $or_by = false, $limit = false) {
-		$table = $this->comb($table, ', ');
-		$field = $this->comb($field, ', ');
+		$table = $this->comb(',',$table);
+		$field = $this->comb(',', $field);
 		$req = ($req)?'where ' . $req:'';
-		$or_by = ($or_by)?" order by " . $this->comb($or_by, ', '):'';
+		$or_by = ($or_by)?" order by " . $this->comb(',',$or_by):'';
 		$limit = ($limit)?" limit " . $limit:'';
 		$sql = "select $field from $table $req $or_by $limit;";
 		return $sql;
 	}
 
-	public function In($table, $field, $value) {
-		$field = '(' . $this->comb($field, ', ') . ')';
-		$value = "(" . $this->comb($this->ValAddTip($value), ", ") . ')';
+	public function In($table, $arr) {
+		$field = '(' . $this->comb(',',array_keys($arr)). ')';
+		$value = "(" . $this->comb(',',$this->ValAddTip(array_values($arr))) . ')';
 		$sql = "insert into $table $field values $value;";
 		return $sql;
 	}
 
 	public function Del($table, $req = '') {
 		//DELETE FROM [TABLE NAME] WHERE 條件;
-		$table = $this->comb($table, ', ');
+		$table = $this->comb(',',$table);
 		if ($req != '')
 			$req = 'where ' . $req;
 		$sql = "DELETE FROM $table $req;";
 		return $sql;
 	}
 
-	public function Up($table, $value, $req) {
+	public function Up($table, $arr,$req) {
 		//UPDATE [TABLE NAME] SET [欄名1]=值1, [欄名2]=值2, …… WHERE 條件;
-		$value = $this->comb($value, ", ");
+		foreach($arr as $key => $value){
+			$toV[] = "`$key`='$value'";
+		}
+		$value = $this->comb(",",$toV);
 		$req = 'where ' . $req;
 		$sql = "update $table set $value $req;";
 		return $sql;
@@ -138,9 +141,9 @@ class LibDataBase {
 		$link = null;
 		return $this->ValDecode($re);
 	}
-	private function ValAddTip($arr){
+	private function ValAddTip($arr,$tip="'"){
 		foreach($arr as $key =>$value){
-			$arr[$key] = "'$value'";
+			$arr[$key] = "$tip$value$tip";
 		}
 		return $arr;
 	}

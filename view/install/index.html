@@ -3,7 +3,7 @@
 	<span class = 'Lang_AdminPw' ></span><input type = 'password' id = 'AdPw' /><br />
 	<span class = 'Lang_SiteName' ></span><input type = 'text' id = 'SiteName' /><br />
 	<span class = 'Lang_SiteUrl' ></span><input type = 'text' id = 'SiteUrl' /><br />
-	<span class = 'Lang_SiteLang' ></span><select id = 'SiteLang' /></select><br />
+	<span class = 'Lang_SiteLang' ></span><select id = 'SiteLang'></select><br />
 	<span class = 'Lang_DbType' ></span><select id = 'DbType'><option value = ''></option><option value = 'sqlite'>Sqlite</option><option value = 'mysql'>MySql</option></select><br />
 	<div id ='sql'>
 		<span class = 'Lang_DbName' ></span><input type = 'text' id = 'DbName' /><br />
@@ -37,7 +37,7 @@ $(window).ready(function(){
 		}
 	});
 	$('#SiteLang').change(function(){
-		$("head").append("<scr" + "ipt type=\"text/javascript\" src=\"view/lang/"+$(this).val()+".php\"></scr" + "ipt>");
+		$("head").append("<scr" + "ipt type=\"text/javascript\" src=\"js/Lang/"+$(this).val()+"\"></scr" + "ipt>");
 	});
 });
 function next(){

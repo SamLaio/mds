@@ -4,6 +4,7 @@
 [<span class='link' id = 'FlowAdd'><span>Add</span></span>]
 <div id = 'UrlEditDiv' style = 'position: absolute;top: 20%;left: 35%;width: 30%;z-index: 3000;background-color: #efefef;text-align:center;'>
 	<div id = 'UrlSet' style = 'text-align:left;width:98%;margin:1%;text-align:center;'>
+		<input type = 'hidden' id = 'FlowAddSeq' />
 		<input type = 'text' id = 'FlowAddDate' />
 		<select id = 'FlowAddType'>
 			<option value = '+'>+</option>
@@ -18,7 +19,9 @@
 <div id = 'FlowMain'>
 </div>
 <script>
+var flowArr;
 $(window).ready(function(){
+	getFlow();
 	$('#UrlEditDiv').hide();
 	$('#FlowAdd').on('click',function(){
 		$('#UrlEditDiv').show();
@@ -27,12 +30,14 @@ $(window).ready(function(){
 		if($('#FlowAddDate').val() != '' && $('#FlowAddAmount').val() != '' && !isNaN($('#FlowAddAmount').val())){
 			$.post('<?php echo $_SESSION['SiteUrl'];?>cgi/flow/AddFlow',
 				{
+					'FlowAddSeq':$('#FlowAddSeq').val(),
 					'FlowAddDate':$('#FlowAddDate').val(),
 					'FlowAddType':$('#FlowAddType').val(),
 					'FlowAddAmount':$('#FlowAddAmount').val(),
 					'FlowAddNote':$('#FlowAddNote').val(),
 				},
 				function(){
+					$('#FlowAddSeq').val('');
 					$('#FlowAddDate').val('');
 					$('#FlowAddType').val('+');
 					$('#FlowAddAmount').val('');
@@ -45,6 +50,7 @@ $(window).ready(function(){
 			alert('error');
 	});
 	$('#UrlClose').on('click',function(){
+		$('#FlowAddSeq').val('');
 		$('#FlowAddDate').val('');
 		$('#FlowAddType').val('+');
 		$('#FlowAddAmount').val('');
@@ -59,29 +65,80 @@ $(window).ready(function(){
 		if (e.which == 27)
 			$(this).val('All');
 	});
-	getFlow();
 	$('#FlowSet').on('click',function(){
 		getFlow();
-	});
-	$('#FlowAdd').on('click',function(){
-		
 	});
 });
 function getFlow(){
 	$.post('<?php echo $_SESSION['SiteUrl'];?>cgi/flow/GetFlow',
 		{'s_date':$('#s_date').val(),'e_date':$('#e_date').val()},
 		function(e){
-			var tmp = '';
+			flowArr = e;
+			var tabledata = '',amountCount=0;
 			for(var i = 0; i < e.length; i ++){
 				var color = " style = 'color:#0000ff;'";
 				if(e[i].type == '-')
 					color = " style = 'color:#ff0000;'";
-				tmp += '<tr '+color+'><td>'+e[i].in_date+'</td><td>'+e[i].type+'</td><td>'+e[i].user_id+'</td><td>'+e[i].amount+'</td><td>'+e[i].note+'</td></tr>';
+				tabledata += '<tr'+color+'><td>'+e[i].in_date+'</td><td>'+e[i].type+'</td><td>'+e[i].amount+'</td><td>'+e[i].note+'</td><td>[<span class = "link" onclick = "valEedit(\''+e[i].seq+'\');">Edit</span>]</td></tr>';
+				if(e[i].type == '-')
+					amountCount -= parseInt (e[i].amount);
+				if(e[i].type == '+')
+					amountCount += parseInt (e[i].amount);
 			}
-			$('#FlowMain').html("<table id ='FlowTable'><thead><tr><td>in_date</td><td>type</td><td>user_id</td><td>amount</td><td>note</td></tr></thead><tbody>"+tmp+'</tbody></table></div>');
-			$("#FlowTable").dataTable(dataTableDef);
+			$('#FlowMain').html("<span>"+amountCount+"</span><table id ='FlowTable'><thead><tr><td>in_date</td><td>type</td><td>amount</td><td>note</td><td>edit</td></tr></thead><tbody>"+tabledata+'</tbody></table></div>');
+			
+			$("#FlowTable").dataTable(dataTableDef,
+			{
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+ 
+            // Total over all pages
+            data = api.column( 2 ).data();
+            total = data.length ?
+                data.reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                } ) :
+                0;
+ 
+            // Total over this page
+            data = api.column( 4, { page: 'current'} ).data();
+            pageTotal = data.length ?
+                data.reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                } ) :
+                0;
+ 
+            // Update footer
+            $( api.column( 2 ).footer() ).html(
+                '$'+pageTotal +' ( $'+ total +' total)'
+            );
+        }
+    }
+			);
 		},
 		'json'
 	);
+}
+function valEedit(id){
+	for(var i = 0; i < flowArr.length; i++){
+		if(flowArr[i].seq == id){
+			$('#FlowAddSeq').val(flowArr[i].seq);
+			$('#FlowAddDate').val(flowArr[i].in_date);
+			$('#FlowAddType').val(flowArr[i].type);
+			$('#FlowAddAmount').val(flowArr[i].amount);
+			$('#FlowAddNote').val(flowArr[i].note);
+			$('#UrlEditDiv').show();
+		}
+	}
+	
+	
 }
 </script>

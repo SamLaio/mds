@@ -1,11 +1,9 @@
 <?php
 class login {
 	private $db;
-	public $SiteName;
 	function __construct() {
 		include 'model/login.php';
 		$this->db = new ModelLogin;
-		$this->SiteName='登入';
 	}
 	
 	public function UserCk($arr){

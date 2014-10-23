@@ -1,7 +1,7 @@
 var datepickerDef,dataTableDef;
-var alert_sub;
+var alert_sub,strLang;
 $(window).ready(function(){
-	var strLang = new Array(
+	strLang = new Array(
 		{'name':'InstallInfo','type':'def','val':'安裝設定'},
 		{'name':'AdminName','type':'def','val':'管理員帳號:'},
 		{'name':'AdminPw','type':'def','val':'管理員密碼:'},
@@ -41,7 +41,6 @@ $(window).ready(function(){
 			'StNull':'資料不齊!!',
 			'StError':'資料錯誤!!',
 			'CaptchaNull':'驗證碼空白或錯誤!!'
-			
 		}
 	};
 	datepickerDef={

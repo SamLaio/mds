@@ -16,6 +16,7 @@ class InstallModel extends LibDataBase {
 				`token` text,
 				`token_date` varchar(20),
 				`old_token` text,
+				`group` text,
 				PRIMARY KEY (`seq`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 			$this->Query("CREATE TABLE `flow` (
@@ -26,7 +27,6 @@ class InstallModel extends LibDataBase {
 				`amount` text NOT NULL,
 				`in_date` text,
 				`in_date` varchar(20) NOT NULL DEFAULT '1',
-				`group` text,
 				PRIMARY KEY (`seq`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 			$this->Query("CREATE TABLE `site` (
@@ -54,16 +54,23 @@ class InstallModel extends LibDataBase {
 				[amount] TEXT DEFAULT '0' NOT NULL,
 				[in_date] VARCHAR(20)  NOT NULL
 			);");
-			//$this->Query('CREATE UNIQUE INDEX [IDX_USER_] ON [user]([seq]  DESC);');
 			$this->Query('CREATE TABLE [site] (
 				[name] text  NOT NULL,
 				[url] text  NULL,
 			[lang] text  NULL)');
 		}
 		$tokenDate = date('Y-m-d H:i:s');
-		$this->Query($this->In('user', array('account','pswd','name','token','token_date','old_token'), array("'".$arr['AdName']."'","'".md5($arr['AdPw'])."'","'Admin'","'".md5($arr['AdName'].$tokenDate.$arr['AdPw'])."'","'$tokenDate'","'".md5($arr['AdName'].$tokenDate.$arr['AdPw'])."'")));
-		//echo $this->In('site', array('name','url'), array("'".$arr['SiteName']."'","'".$arr['SiteUrl']."'","'Admin'"));
-		$this->Query($this->In('site', array('name','url','lang'), array("'".$arr['SiteName']."'","'".$arr['SiteUrl']."'","'".$arr['SiteLang']."'")));
+		$this->Query($this->In('user', 
+			array(
+				'account'=>$arr['AdName'],
+				'pswd'=>md5($arr['AdPw']),
+				'name'=>'Admin',
+				'token'=>md5($arr['AdName'].$tokenDate.$arr['AdPw']),
+				'token_date'=>$tokenDate,
+				'old_token'=>md5($arr['AdName'].$tokenDate.$arr['AdPw'])
+			)
+		));
+		$this->Query($this->In('site', array('name'=>$arr['SiteName'],'url'=>$arr['SiteUrl'],'lang'=>$arr['SiteLang'])));
 		return true;
 	}
 }

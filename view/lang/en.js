@@ -1,7 +1,7 @@
 var datepickerDef,dataTableDef;;
-var alert_sub;
+var alert_sub,strLang;
 $(window).ready(function(){
-	var strLang = new Array(
+	strLang = new Array(
 		{'name':'InstallInfo','type':'def','val':'Install Info'},
 		{'name':'AdminName','type':'def','val':'Administrator Name:'},
 		{'name':'AdminPw','type':'def','val':'Administrator Password:'},

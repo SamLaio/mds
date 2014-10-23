@@ -7,18 +7,19 @@ class install {
 			if(isset($DbType)){
 				unset($_SESSION['SiteName']);
 				unset($_SESSION['SiteUrl']);
+				unset($_SESSION['SiteLang']);
 				echo '<script>history.back(1);</script>';
 				exit;
 			}
 		}else{
 			$_SESSION['SiteName'] = 'MyMVC';
-			$_SESSION['SiteLang'] = 'en';
 		}
 	}
 	public function Lang(){
 		$ret = array();
+		//print_r(SCANDIR('view/lang'));
 		foreach(SCANDIR('view/lang') as $value){
-			if (substr($value, 0, strrpos($value, ".php")))
+			if (substr($value, 0, strrpos($value, ".js")))
 				$ret[]['lang'] = substr($value, 0, strrpos($value, "."));
 		}
 		echo json_encode($ret);

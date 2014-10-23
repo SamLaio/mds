@@ -2,14 +2,13 @@
 class View {
 	private $isPw = false;
 	function __construct($page, $InData) {
-
-		if(isset($InData['OnlyBody']) and !$InData['OnlyBody'])
+		if(isset($InData['OnlyBody']) and $InData['OnlyBody'])
 			include_once 'hend.html';
 		include_once "view/$page.html";
 		if($this->getBody('view/'.$page.'.html')){
 			echo $this->PwEnCode();
 		}
-		if(isset($InData['OnlyBody']) and !$InData['OnlyBody'])
+		if(isset($InData['OnlyBody']) and $InData['OnlyBody'])
 			include_once 'foot.html';
 	}
 	public function PwEnCode(){
