@@ -25,19 +25,15 @@ class InstallModel extends LibDataBase {
 				`user_id` int(11) NOT NULL,
 				`note` text,
 				`type` varchar(2) NOT NULL,
-				`amount` text NOT NULL,
-				`in_date` text,
-				`in_date` varchar(20) NOT NULL DEFAULT '1',
+				`amount` text NOT NULL DEFAULT '0',
+				`in_date` varchar(20) NOT NULL,
 				PRIMARY KEY (`seq`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 			$this->Query("CREATE TABLE `plan` (
 				`seq` int(11) NOT NULL AUTO_INCREMENT,
 				`user_id` int(11) NOT NULL,
-				`note` text,
-				`type` varchar(2) NOT NULL,
-				`amount` text NOT NULL,
-				`in_date` text,
-				`in_date` varchar(20) NOT NULL DEFAULT '1',
+				`earnings` text NOT NULL DEFAULT '0',
+				`in_date` varchar(20) NOT NULL,
 				PRIMARY KEY (`seq`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 			$this->Query("CREATE TABLE `site` (
@@ -69,9 +65,7 @@ class InstallModel extends LibDataBase {
 			$this->Query("CREATE TABLE [plan] (
 				[seq] INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL,
 				[user_id] INTEGER  NOT NULL,
-				[note] TEXT  NULL,
-				[type] VARCHAR(2)  NOT NULL,
-				[amount] TEXT DEFAULT '0' NOT NULL,
+				[earnings] TEXT DEFAULT '0' NOT NULL,
 				[in_date] VARCHAR(20)  NOT NULL
 			);");
 			$this->Query('CREATE TABLE [site] (

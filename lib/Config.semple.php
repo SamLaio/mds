@@ -12,3 +12,4 @@
 	$DbType = 'sqlite';
 	$DbName = 'model/mymvc.m5';
 	*/
+?>
