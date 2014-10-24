@@ -1,1 +1,7 @@
-index
+<?php
+	if(isset($_SESSION['UserId'])){
+		include 'Logined.html';
+	}else{
+		include 'UnLogin.html';
+	}
+?>

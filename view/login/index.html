@@ -2,16 +2,22 @@
 <span class = 'Lang_password'></span><input type ='password' id ='pswd' /><br />
 <span class = 'Lang_captcha'></span><br />
 <img id = 'captchaImg' src = '<?php echo $_SESSION['SiteUrl']; ?>cgi/captcha/ImgPut' />
-<input type ='text' id = 'captcha' />
+<input type ='text' id = 'captcha' maxlength = '6' size ='8' />
 [<span id = 'ReLoadCapthcha' class='link' onclick=""><span class = 'Lang_ReLoadCapthcha'></span></span>]
 [<span class='link' onclick="userck()"><span class = 'Lang_login'></span></span>]
 
 <script>
 	$(window).ready(function(){
-		$('#acc, #pswd').on("keydown", function (e) {
+		$('#acc, #pswd, #captcha').on("keydown", function (e) {
 			//-- 13 > Enter鍵 || 9 > Tab鍵
 			if (e.which == 13)
 				userck();
+		});
+		$('#captcha').on('keyup',function(){
+			//var tmpStr = $(this).val();
+			//alert(1);
+			//$(this).val().toUpperCase();
+			$(this).val($(this).val().toUpperCase());
 		});
 		$('#ReLoadCapthcha').on('click',function(){
 			document.getElementById('captchaImg').setAttribute('src','<?php echo $_SESSION['SiteUrl']; ?>cgi/captcha/ImgPut?'+Math.random());document.getElementById('captchaImg').value='';

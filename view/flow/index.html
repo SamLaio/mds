@@ -2,8 +2,8 @@
 <span class = 'Lang_EndDate'></span><input type = 'text' id = 'e_date' value = 'All' />
 [<span class='link' id = 'FlowSet'><span>Set</span></span>]
 [<span class='link' id = 'FlowAdd'><span>Add</span></span>]
-<div id = 'UrlEditDiv' style = 'position: absolute;top: 20%;left: 35%;width: 30%;z-index: 3000;background-color: #efefef;text-align:center;'>
-	<div id = 'UrlSet' style = 'text-align:left;width:98%;margin:1%;text-align:center;'>
+<div id = 'FlowEditMain' style = 'position: absolute;top: 20%;left: 35%;width: 30%;z-index: 3000;background-color: #efefef;text-align:center;'>
+	<div style = 'text-align:left;width:98%;margin:1%;text-align:center;'>
 		<input type = 'hidden' id = 'FlowAddSeq' />
 		<input type = 'text' id = 'FlowAddDate' />
 		<select id = 'FlowAddType'>
@@ -13,8 +13,8 @@
 		<input type = 'number' id = 'FlowAddAmount' />
 		<input type = 'text' id = 'FlowAddNote' />
 	</div>
-	[<span class = 'link' id = 'UrlSubmit'>Submit</span>]
-	[<span class = 'link' id = 'UrlClose'>Close</span>]
+	[<span class = 'link' id = 'FlowSubmit'>Submit</span>]
+	[<span class = 'link' id = 'FlowClose'>Close</span>]
 </div>
 <div id = 'FlowMain'>
 </div>
@@ -22,11 +22,11 @@
 var flowArr;
 $(window).ready(function(){
 	getFlow();
-	$('#UrlEditDiv').hide();
+	$('#FlowEditMain').hide();
 	$('#FlowAdd').on('click',function(){
-		$('#UrlEditDiv').show();
+		$('#FlowEditMain').show();
 	});
-	$('#UrlSubmit').on('click',function(){
+	$('#FlowSubmit').on('click',function(){
 		if($('#FlowAddDate').val() != '' && $('#FlowAddAmount').val() != '' && !isNaN($('#FlowAddAmount').val())){
 			$.post('<?php echo $_SESSION['SiteUrl'];?>cgi/flow/AddFlow',
 				{
@@ -42,20 +42,20 @@ $(window).ready(function(){
 					$('#FlowAddType').val('+');
 					$('#FlowAddAmount').val('');
 					$('#FlowAddNote').val('');
-					$('#UrlEditDiv').hide();
+					$('#FlowEditMain').hide();
 					getFlow();
 				}
 			);
 		}else
 			alert('error');
 	});
-	$('#UrlClose').on('click',function(){
+	$('#FlowClose').on('click',function(){
 		$('#FlowAddSeq').val('');
 		$('#FlowAddDate').val('');
 		$('#FlowAddType').val('+');
 		$('#FlowAddAmount').val('');
 		$('#FlowAddNote').val('');
-		$('#UrlEditDiv').hide();
+		$('#FlowEditMain').hide();
 	});
 	$("#FlowAddDate").datepicker(datepickerDef).on("keydown", function (e) {
 		if (e.which == 27)
@@ -74,55 +74,33 @@ function getFlow(){
 		{'s_date':$('#s_date').val(),'e_date':$('#e_date').val()},
 		function(e){
 			flowArr = e;
-			var tabledata = '',amountCount=0;
+			var tabledata = '',amountA=0,amountB=0/*,amountCount=0*/;
 			for(var i = 0; i < e.length; i ++){
 				var color = " style = 'color:#0000ff;'";
 				if(e[i].type == '-')
 					color = " style = 'color:#ff0000;'";
 				tabledata += '<tr'+color+'><td>'+e[i].in_date+'</td><td>'+e[i].type+'</td><td>'+e[i].amount+'</td><td>'+e[i].note+'</td><td>[<span class = "link" onclick = "valEedit(\''+e[i].seq+'\');">Edit</span>]</td></tr>';
 				if(e[i].type == '-')
-					amountCount -= parseInt (e[i].amount);
+					amountB += parseInt(e[i].amount);
 				if(e[i].type == '+')
-					amountCount += parseInt (e[i].amount);
+					amountA += parseInt(e[i].amount);
 			}
-			$('#FlowMain').html("<span>"+amountCount+"</span><table id ='FlowTable'><thead><tr><td>in_date</td><td>type</td><td>amount</td><td>note</td><td>edit</td></tr></thead><tbody>"+tabledata+'</tbody></table></div>');
-			
-			$("#FlowTable").dataTable(dataTableDef,
-			{
-        "footerCallback": function ( row, data, start, end, display ) {
-            var api = this.api(), data;
- 
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
- 
-            // Total over all pages
-            data = api.column( 2 ).data();
-            total = data.length ?
-                data.reduce( function (a, b) {
-                        return intVal(a) + intVal(b);
-                } ) :
-                0;
- 
-            // Total over this page
-            data = api.column( 4, { page: 'current'} ).data();
-            pageTotal = data.length ?
-                data.reduce( function (a, b) {
-                        return intVal(a) + intVal(b);
-                } ) :
-                0;
- 
-            // Update footer
-            $( api.column( 2 ).footer() ).html(
-                '$'+pageTotal +' ( $'+ total +' total)'
-            );
-        }
-    }
-			);
+			var sub = 0;
+			sub = amountA - amountB;
+			if(sub < 0)
+				sub = "<div style = 'text-align:right'>"+
+				"<span  style = 'color:#0000ff;'>"+amountA+"</span>-"+
+				"<span  style = 'color:#ff0000;'>"+amountB+"</span>="+
+				"<span  style = 'color:#ff0000;'>"+sub+"</span>"+
+				"</span></div>";
+			if(sub > 0)
+				sub = "<div style = 'text-align:right'>"+
+				"<span  style = 'color:#0000ff;'>"+amountA+"</span>-"+
+				"<span  style = 'color:#ff0000;'>"+amountB+"</span>="+
+				"<span  style = 'color:#0000ff;'>"+sub+"</span>"+
+				"</div>\n";
+			$('#FlowMain').html(sub+"<table id ='FlowTable'><thead><tr><td>in_date</td><td>type</td><td>amount</td><td>note</td><td>edit</td></tr></thead><tbody>"+tabledata+'</tbody></table>');
+			$("#FlowTable").dataTable(dataTableDef);
 		},
 		'json'
 	);
@@ -135,10 +113,8 @@ function valEedit(id){
 			$('#FlowAddType').val(flowArr[i].type);
 			$('#FlowAddAmount').val(flowArr[i].amount);
 			$('#FlowAddNote').val(flowArr[i].note);
-			$('#UrlEditDiv').show();
+			$('#FlowEditMain').show();
 		}
 	}
-	
-	
 }
 </script>

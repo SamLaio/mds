@@ -1,32 +1,31 @@
 <?php
 class ModelFlow  extends LibDataBase {
-	private $db;
+	private $UserTable;
 	function __construct() {
 		parent::__construct();
+		$this->table = 'flow';
+		$this->UserTable = 'user';
 	}
-	public function FlowShow($arr){
-	
-	}
-	public function FlowAdd($arr){
-		$arr = json_decode($arr['post']);
-		$val = array();
-		$fold = '';
-		foreach($arr as $arrV){
-			$arrV['user_id'] = $_SESSION['UserId'];
-			$fold = $this->addTip($arrV);
-			$val[] = '('.implode(',',$fold['val']).')';
-			$fold = implode(',',$fold['fold']);
+	public function GetFlow($arr){
+		$arr = implode(' and ', $arr);
+		$re = $this->Assoc($this->table,'*', $arr,'in_date desc');
+		$accName = $this->Assoc($this->UserTable,'*');
+		foreach($re as $key =>$value){
+			foreach($accName as $nameV)
+				$re[$key]['user_id'] = ($nameV['seq'] == $value['user_id'])? $nameV['name']:'unfind';
 		}
-		$val = implode(',',$val);
-		echo $fold;
-		echo $val;
+		return $re;
 	}
-	private function addTip($arr){
-		$ret = array();
-		foreach($arr as $key => $val){
-			$ret['fold'][] = "'$key'";
-			$ret['val'][] = "'$val'";
+	public function AddFlow($arr){
+		if($arr['seq'] != ''){
+			$tmp = $arr['seq'];
+			unset($arr['seq']);
+			$arr = $this->db->Up($this->table,$arr,"seq = '".$tmp."'");
+		}else{
+			$arr['user_id'] = $_SESSION['UserId'];
+			unset($arr['seq']);
+			$arr = $this->db->In($this->table,$arr);
 		}
-		return $ret;
+		$this->db->Query($arr);
 	}
 }

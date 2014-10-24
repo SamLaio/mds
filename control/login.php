@@ -15,6 +15,9 @@ class login {
 				$_SESSION['UserId'] = $account['seq'];
 				$_SESSION['UserName'] = $account['name'];
 				$_SESSION['group'] = $account['group'];
+				$_SESSION['token'] = $account['token'];
+				if($account['admin'] == 1)
+					$_SESSION['admin'] = 1;
 				
 				unset($_SESSION['PwEnCode']);
 				unset($_SESSION['PwHand']);
@@ -36,6 +39,7 @@ class login {
 		unset($_SESSION['UserId']);
 		unset($_SESSION['UserName']);
 		unset($_SESSION['group']);
+		unset($_SESSION['admin']);
 		echo 1;
 	}
 	

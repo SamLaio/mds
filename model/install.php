@@ -12,14 +12,25 @@ class InstallModel extends LibDataBase {
 				`account` text NOT NULL,
 				`pswd` text NOT NULL,
 				`name` text,
-				`status` int(11) NOT NULL DEFAULT '1',  
 				`token` text,
 				`token_date` varchar(20),
 				`old_token` text,
 				`group` text,
+				`status` int(11) NOT NULL DEFAULT '1', 
+				`admin` int(11) NOT NULL DEFAULT '0',
 				PRIMARY KEY (`seq`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 			$this->Query("CREATE TABLE `flow` (
+				`seq` int(11) NOT NULL AUTO_INCREMENT,
+				`user_id` int(11) NOT NULL,
+				`note` text,
+				`type` varchar(2) NOT NULL,
+				`amount` text NOT NULL,
+				`in_date` text,
+				`in_date` varchar(20) NOT NULL DEFAULT '1',
+				PRIMARY KEY (`seq`)
+			) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
+			$this->Query("CREATE TABLE `plan` (
 				`seq` int(11) NOT NULL AUTO_INCREMENT,
 				`user_id` int(11) NOT NULL,
 				`note` text,
@@ -40,13 +51,22 @@ class InstallModel extends LibDataBase {
 				[account] TEXT  NOT NULL,
 				[pswd] TEXT  NOT NULL,
 				[name] TEXT  NOT NULL,
-				[status] INTEGER DEFAULT '1' NOT NULL,
 				[token] TEXT  NULL,
 				[token_date] VARCHAR(20)  NULL,
 				[old_token] TEXT  NULL,
-				[group] TEXT NULL
+				[group] TEXT NULL,
+				[status] INTEGER DEFAULT '1' NOT NULL,
+				[admin] INTEGER DEFAULT '0' NOT NULL
 			);");
 			$this->Query("CREATE TABLE [flow] (
+				[seq] INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL,
+				[user_id] INTEGER  NOT NULL,
+				[note] TEXT  NULL,
+				[type] VARCHAR(2)  NOT NULL,
+				[amount] TEXT DEFAULT '0' NOT NULL,
+				[in_date] VARCHAR(20)  NOT NULL
+			);");
+			$this->Query("CREATE TABLE [plan] (
 				[seq] INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL,
 				[user_id] INTEGER  NOT NULL,
 				[note] TEXT  NULL,
@@ -67,7 +87,8 @@ class InstallModel extends LibDataBase {
 				'name'=>'Admin',
 				'token'=>md5($arr['AdName'].$tokenDate.$arr['AdPw']),
 				'token_date'=>$tokenDate,
-				'old_token'=>md5($arr['AdName'].$tokenDate.$arr['AdPw'])
+				'old_token'=>md5($arr['AdName'].$tokenDate.$arr['AdPw']),
+				'admin'=>'1'
 			)
 		));
 		$this->Query($this->In('site', array('name'=>$arr['SiteName'],'url'=>$arr['SiteUrl'],'lang'=>$arr['SiteLang'])));

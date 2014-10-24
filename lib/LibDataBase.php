@@ -141,7 +141,7 @@ class LibDataBase {
 		$link = null;
 		return $this->ValDecode($re);
 	}
-	private function ValAddTip($arr,$tip="'"){
+	public function ValAddTip($arr,$tip="'"){
 		foreach($arr as $key =>$value){
 			$arr[$key] = "$tip$value$tip";
 		}

@@ -1,0 +1,93 @@
+<div id = 'GroupMain'></div>
+<span class = 'Lang_StartDate'></span><input type = 'text' id = 's_date' value = 'All' />
+<span class = 'Lang_EndDate'></span><input type = 'text' id = 'e_date' value = 'All' />
+[<span class='link' id = 'FlowSet'><span>Set</span></span>]
+<div id = 'FlowMain'>
+</div>
+<script>
+var flowArr, group;
+$(window).ready(function(){
+	$("#s_date, #e_date").datepicker(datepickerDef).on("keydown", function (e) {
+		if (e.which == 27)
+			$(this).val('All');
+	});
+	$('#FlowSet').on('click',function(){
+		getFlow();
+	});
+	$.post('<?php echo $_SESSION['SiteUrl'];?>cgi/index/GroupOut',function(e){
+		$('#GroupMain').html('');
+		$('#GroupMain').append("<span id = 'All' class = 'link'>All</span>");
+		group = new Array();
+		for(var i = 0; i < e.length; i++){
+			$('#GroupMain').append("<span id = '"+e[i].token+"' class = 'link'>"+e[i].name+"</span>");
+			group[i] = {'id':e[i].token,'set':true};
+		}
+		$('#GroupMain span').css({'background-color':'#eeefff','padding':'0 10px 0 10px',"margin-right":"1em"});
+		$('#GroupMain').find('span').on('click',function(){
+			if($(this)[0].id == 'All'){
+				for(var i = 0; i < group.length; i++){
+					group[i].set = true;
+					$('#GroupMain span').css({'background-color':'#eeefff'});
+				}
+			}else{
+				for(var i = 0; i < group.length; i++){
+					if($(this)[0].id == group[i].id){
+						group[i].set = !group[i].set;
+						if(group[i].set)
+							$(this).css({'background-color':'#eeefff'});
+						else{
+							$(this).css({'background-color':'#efefef'});
+							$('#GroupMain span')[0].css({'background-color':'#efefef'});
+						}
+					}
+				}
+			}
+			getFlow();
+		});
+	},'json');
+	getFlow();
+});
+function getFlow(){
+	var toGroup='';
+	for(var i = 0; i < $('#GroupMain span').length; i++){
+		if(toGroup != '')
+			toGroup += ',';
+		if(group[i].set == true)
+			toGroup += group[i].id;
+	}
+	$.post('<?php echo $_SESSION['SiteUrl'];?>cgi/index/GetFlow',
+		{'s_date':$('#s_date').val(),'e_date':$('#e_date').val(),'group':toGroup},
+		function(e){
+			flowArr = e;
+			var tabledata = '',amountA=0,amountB=0;
+			for(var i = 0; i < e.length; i ++){
+				var color = " style = 'color:#0000ff;'";
+				if(e[i].type == '-')
+					color = " style = 'color:#ff0000;'";
+				tabledata += '<tr'+color+'><td>'+e[i].in_date+'</td><td>'+e[i].type+'</td><td>'+e[i].amount+'</td><td>'+e[i].note+'</td></tr>';
+				if(e[i].type == '-')
+					amountB += parseInt(e[i].amount);
+				if(e[i].type == '+')
+					amountA += parseInt(e[i].amount);
+			}
+			var sub = 0;
+			sub = amountA - amountB;
+			if(sub < 0)
+				sub = "<div style = 'text-align:right'>"+
+				"<span  style = 'color:#0000ff;'>"+amountA+"</span>-"+
+				"<span  style = 'color:#ff0000;'>"+amountB+"</span>="+
+				"<span  style = 'color:#ff0000;'>"+sub+"</span>"+
+				"</span></div>";
+			if(sub > 0)
+				sub = "<div style = 'text-align:right'>"+
+				"<span  style = 'color:#0000ff;'>"+amountA+"</span>-"+
+				"<span  style = 'color:#ff0000;'>"+amountB+"</span>="+
+				"<span  style = 'color:#0000ff;'>"+sub+"</span>"+
+				"</div>\n";
+			$('#FlowMain').html(sub+"<table id ='FlowTable'><thead><tr><td>in_date</td><td>type</td><td>amount</td><td>note</td></tr></thead><tbody>"+tabledata+'</tbody></table>');
+			$("#FlowTable").dataTable(dataTableDef);
+		},
+		'json'
+	);
+}
+</script>
