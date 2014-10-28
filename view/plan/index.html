@@ -1,1 +1,5 @@
-plan
+<script>
+$(window).ready(function(){
+	$.post('<?php echo $_SESSION['SiteUrl']; ?>cgi/plan/GetPlan');
+});
+</script>

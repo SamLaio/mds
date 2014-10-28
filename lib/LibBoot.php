@@ -10,9 +10,7 @@ class LibBoot {
 				if($url[1] == 'Lang'){
 					if(!isset($_SESSION['SiteLang']) and !isset($url[2]))
 						$_SESSION['SiteLang'] = 'en';
-					else if(isset($_SESSION['SiteLang']) and !isset($url[2]))
-						$_SESSION['SiteLang'] = $_SESSION['SiteLang'];
-					else if(!isset($_SESSION['SiteLang']) and isset($url[2]))
+					else if(isset($url[2]))
 						$_SESSION['SiteLang'] = $url[2];
 				}
 				include "control/".$url[0].".php";

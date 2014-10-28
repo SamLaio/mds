@@ -11,6 +11,9 @@
 			<option value = '-'>-</option>
 		</select>
 		<input type = 'number' id = 'FlowAddAmount' />
+		<select id = 'FlowAddClass_1'></select>
+		<input type = 'text' id = 'FlowAddClass_2' />
+		
 		<input type = 'text' id = 'FlowAddNote' />
 	</div>
 	[<span class = 'link' id = 'FlowSubmit'>Submit</span>]
@@ -28,20 +31,23 @@ $(window).ready(function(){
 	});
 	$('#FlowSubmit').on('click',function(){
 		if($('#FlowAddDate').val() != '' && $('#FlowAddAmount').val() != '' && !isNaN($('#FlowAddAmount').val())){
+			var flowClass;
+			if($('#FlowAddClass_1').val() != ""){
+				flowClass = $('#FlowAddClass_1').val();
+			}else{
+				flowClass = $('#FlowAddClass_2').val();
+			}
 			$.post('<?php echo $_SESSION['SiteUrl'];?>cgi/flow/AddFlow',
 				{
 					'FlowAddSeq':$('#FlowAddSeq').val(),
 					'FlowAddDate':$('#FlowAddDate').val(),
 					'FlowAddType':$('#FlowAddType').val(),
 					'FlowAddAmount':$('#FlowAddAmount').val(),
-					'FlowAddNote':$('#FlowAddNote').val(),
+					'FlowAddClass':flowClass,
+					'FlowAddNote':$('#FlowAddNote').val()
 				},
 				function(){
-					$('#FlowAddSeq').val('');
-					$('#FlowAddDate').val('');
-					$('#FlowAddType').val('+');
-					$('#FlowAddAmount').val('');
-					$('#FlowAddNote').val('');
+					valDef();
 					$('#FlowEditMain').hide();
 					getFlow();
 				}
@@ -50,12 +56,14 @@ $(window).ready(function(){
 			alert('error');
 	});
 	$('#FlowClose').on('click',function(){
-		$('#FlowAddSeq').val('');
-		$('#FlowAddDate').val('');
-		$('#FlowAddType').val('+');
-		$('#FlowAddAmount').val('');
-		$('#FlowAddNote').val('');
+		valDef();
 		$('#FlowEditMain').hide();
+	});
+	$('#FlowAddClass_1').on('change',function(){
+		$('#FlowAddClass_2').val('');
+	});
+	$('#FlowAddClass_2').on('change',function(){
+		$('#FlowAddClass_1').val('');
 	});
 	$("#FlowAddDate").datepicker(datepickerDef).on("keydown", function (e) {
 		if (e.which == 27)
@@ -75,11 +83,20 @@ function getFlow(){
 		function(e){
 			flowArr = e;
 			var tabledata = '',amountA=0,amountB=0/*,amountCount=0*/;
+			$('#FlowAddClass_1').append("<option value=''></option>");
 			for(var i = 0; i < e.length; i ++){
 				var color = " style = 'color:#0000ff;'";
 				if(e[i].type == '-')
 					color = " style = 'color:#ff0000;'";
-				tabledata += '<tr'+color+'><td>'+e[i].in_date+'</td><td>'+e[i].type+'</td><td>'+e[i].amount+'</td><td>'+e[i].note+'</td><td>[<span class = "link" onclick = "valEedit(\''+e[i].seq+'\');">Edit</span>]</td></tr>';
+				tabledata += '<tr'+color+'><td>'+e[i].in_date+'</td><td>'+e[i].type+'</td><td>'+e[i].amount+'</td><td>'+e[i].class +'</td><td>'+e[i].note+'</td><td>[<span class = "link" onclick = "valEedit(\''+e[i].seq+'\');">Edit</span>][<span class = "link" onclick = "delFlow(\''+e[i].seq+'\');">Del</span>]</td></tr>';
+				var classCk = true;
+				//alert($('#FlowAddClass_1 option').length);
+				for(var j = 0; j < $('#FlowAddClass_1 option').length; j++){
+					if($('#FlowAddClass_1 option')[j].value == e[i].class )
+						classCk = false;
+				}
+				if(classCk)
+					$('#FlowAddClass_1').append("<option value='"+ e[i].class +"'>"+ e[i].class +"</option>");
 				if(e[i].type == '-')
 					amountB += parseInt(e[i].amount);
 				if(e[i].type == '+')
@@ -99,11 +116,19 @@ function getFlow(){
 				"<span  style = 'color:#ff0000;'>"+amountB+"</span>="+
 				"<span  style = 'color:#0000ff;'>"+sub+"</span>"+
 				"</div>\n";
-			$('#FlowMain').html(sub+"<table id ='FlowTable'><thead><tr><td>in_date</td><td>type</td><td>amount</td><td>note</td><td>edit</td></tr></thead><tbody>"+tabledata+'</tbody></table>');
+			$('#FlowMain').html(sub+"<table id ='FlowTable'><thead><tr><td>in_date</td><td>type</td><td>amount</td><td>class</td><td>note</td><td>edit</td></tr></thead><tbody>"+tabledata+'</tbody></table>');
 			$("#FlowTable").dataTable(dataTableDef);
 		},
 		'json'
 	);
+}
+function delFlow(id){
+	$.post('<?php echo $_SESSION['SiteUrl']; ?>cgi/flow/DelFlow',{'seq':id},function(e){getFlow();});
+}
+function valDef(){
+	$('#FlowEditMain input').val('');
+	$('#FlowAddType').val('+');
+	$('#FlowAddClass_1').val('');
 }
 function valEedit(id){
 	for(var i = 0; i < flowArr.length; i++){
@@ -113,6 +138,7 @@ function valEedit(id){
 			$('#FlowAddType').val(flowArr[i].type);
 			$('#FlowAddAmount').val(flowArr[i].amount);
 			$('#FlowAddNote').val(flowArr[i].note);
+			$('#FlowAddClass_1').val(flowArr[i].class);
 			$('#FlowEditMain').show();
 		}
 	}

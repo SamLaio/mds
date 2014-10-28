@@ -31,4 +31,12 @@ class flow {
 			$this->db->AddFlow($arr);
 		}
 	}
+	public function DelFlow($arr=false){
+		if($arr){
+			$arr = $arr['post']['seq'];
+			//DELETE FROM [TABLE NAME] WHERE 條件;
+			if($arr != '')
+				$this->db->DelFlow($arr);
+		}
+	}
 }

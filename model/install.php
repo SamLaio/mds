@@ -23,9 +23,10 @@ class InstallModel extends LibDataBase {
 			$this->Query("CREATE TABLE `flow` (
 				`seq` int(11) NOT NULL AUTO_INCREMENT,
 				`user_id` int(11) NOT NULL,
-				`note` text,
 				`type` varchar(2) NOT NULL,
 				`amount` text NOT NULL DEFAULT '0',
+				`note` text,
+				`class` text NOT NULL,
 				`in_date` varchar(20) NOT NULL,
 				PRIMARY KEY (`seq`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
@@ -57,9 +58,10 @@ class InstallModel extends LibDataBase {
 			$this->Query("CREATE TABLE [flow] (
 				[seq] INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL,
 				[user_id] INTEGER  NOT NULL,
-				[note] TEXT  NULL,
 				[type] VARCHAR(2)  NOT NULL,
 				[amount] TEXT DEFAULT '0' NOT NULL,
+				[note] TEXT  NULL,
+				[class] TEXT NOT NULL,
 				[in_date] VARCHAR(20)  NOT NULL
 			);");
 			$this->Query("CREATE TABLE [plan] (
