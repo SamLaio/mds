@@ -48,10 +48,10 @@ class install {
 			define('DbType', $arr['DbType']);
 		if(isset($arr['DbHost']))
 			define('DbHost', $arr['DbHost']);
-		if(isset($arr['DbUser']))
-			define('DbUser', $arr['DbUser']);
-		if(isset($arr['DbPw']))
-			define('DbPw', $arr['DbPw']);
+		if(isset($arr['DbAdName']))
+			define('DbUser', $arr['DbAdName']);
+		if(isset($arr['DbAdPw']))
+			define('DbPw', $arr['DbAdPw']);
 		if(isset($arr['DbName'])){
 			if(DbType == 'sqlite')
 				define('DbName', 'model/'.$arr['DbName']);
@@ -65,5 +65,6 @@ class install {
 		include 'model/install.php';
 		$this->installObj = new InstallModel;
 		$this->installObj->St1(array('AdName'=>$arr['AdName'],'AdPw'=>$arr['AdPw'],'SiteName'=>$arr['SiteName'],'SiteUrl'=>$arr['SiteUrl'],'SiteLang'=>$arr['SiteLang']));
+		unset($_SESSION);
 	}
 }

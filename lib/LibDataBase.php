@@ -24,15 +24,13 @@ class LibDataBase {
 		} else {
 			$re = $arr;
 		}
-		/*if(!$re)
-			$re = $this->table;*/
 		return $re;
 	}
 
 	public function Link() {
 		//test link add by Sam 20140805
 		$link = false;
-		if ($this->dbtype == 'mysql' and !$this->chkservice($this->dbhost, 3306)) {
+		if ($this->dbtype == 'mysql' and $this->chkservice($this->dbhost, 3306)) {
 			$to_host = $this->dbhost;
 			$to_user = $this->dbuser;
 			$to_pass = $this->dbpass;

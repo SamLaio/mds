@@ -37,7 +37,7 @@ class InstallModel extends LibDataBase {
 				PRIMARY KEY (`seq`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 			$this->Query("CREATE TABLE `site` (
-				`account` TEXT NOT NULL,
+				`name` TEXT NOT NULL,
 				`url` TEXT NOT NULL,
 				`lang` TEXT NOT NULL
 			)COLLATE='latin1_swedish_ci' ENGINE=MyISAM;");
@@ -71,7 +71,8 @@ class InstallModel extends LibDataBase {
 			$this->Query('CREATE TABLE [site] (
 				[name] text  NOT NULL,
 				[url] text  NULL,
-			[lang] text  NULL)');
+				[lang] text  NULL
+			);');
 		}
 		$tokenDate = date('Y-m-d H:i:s');
 		$this->Query($this->In('user', 
