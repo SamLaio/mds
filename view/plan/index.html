@@ -1,5 +1,51 @@
 <script>
+var planArr = new Array();
 $(window).ready(function(){
-	$.post('<?php echo $_SESSION['SiteUrl']; ?>cgi/plan/GetPlan');
+	$.post('<?php echo $_SESSION['SiteUrl']; ?>cgi/plan/GetPlan',function(e){
+		planArr = e;
+		getPlan(planArr);
+	},'json');
+	$("#s_date, #e_date").datepicker(datepickerDef).on("keydown", function (e) {
+		if (e.which == 27)
+			$(this).val('All');
+	});
+	$("#PlanSet").on("click", function () {
+		//alert(planArr);
+		
+	});
 });
+function getPlan(arr){
+	tabledata = '';
+	for(var i = 0; i < arr.length; i ++){
+		var color = " style = 'color:#0000ff;'";
+		if(arr[i].de != '' || (arr[i].earnings+arr[i].count) < 0)
+			color = " style = 'color:#ff0000;'";
+		tabledata += '<tr'+color+'><td>'+arr[i].date+'</td><td>'+arr[i].add+'</td><td>'+arr[i].de+'</td><td>'+arr[i].earnings+'</td><td>'+arr[i].count+'</td></tr>';
+	}
+	$('#PlanMain').html("<table id ='PlanTable'><thead><tr><td>date</td><td>add</td><td>de</td><td>earnings</td><td>count</td></tr></thead><tbody>"+tabledata+'</tbody></table>');
+	$("#PlanTable").dataTable(dataTableDef);
+}
 </script>
+<span class = 'Lang_StartDate'></span><input type = 'text' id = 's_date' value = 'All' />
+<span class = 'Lang_EndDate'></span><input type = 'text' id = 'e_date' value = 'All' />
+[<span class='link' id = 'PlanSet'><span>Set</span></span>]
+[<span class='link' id = 'PlanAdd'><span>Add</span></span>]
+<!--<div id = 'PlanEditMain' style = 'position: absolute;top: 20%;left: 35%;width: 30%;z-index: 3000;background-color: #efefef;text-align:center;'>
+	<div style = 'text-align:left;width:98%;margin:1%;text-align:center;'>
+		<input type = 'hidden' id = 'PlanAddSeq' />
+		<input type = 'text' id = 'PlanAddDate' />
+		<select id = 'PlanAddType'>
+			<option value = '+'>+</option>
+			<option value = '-'>-</option>
+		</select>
+		<input type = 'number' id = 'PlanAddAmount' />
+		<select id = 'PlanAddClass_1'></select>
+		<input type = 'text' id = 'PlanAddClass_2' />
+		
+		<input type = 'text' id = 'PlanAddNote' />
+	</div>
+	[<span class = 'link' id = 'PlanSubmit'>Submit</span>]
+	[<span class = 'link' id = 'PlanClose'>Close</span>]
+</div>-->
+<div id = 'PlanMain'>
+</div>

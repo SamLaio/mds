@@ -6,10 +6,6 @@ class plan {
 		$this->db = new ModelPlan;
 	}
 	public function GetPlan(){
-		/*
-		Earnings
-		Loss
-		*/
 		echo json_encode($this->db->GetPlan());
 	}
 }
