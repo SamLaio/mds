@@ -5,6 +5,9 @@ class plan {
 		include 'model/plan.php';
 		$this->db = new ModelPlan;
 	}
+	public function GetFlow(){
+		echo json_encode($this->db->GetFlow());
+	}
 	public function GetPlan(){
 		echo json_encode($this->db->GetPlan());
 	}

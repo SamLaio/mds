@@ -6,7 +6,7 @@ class ModelPlan  extends LibDataBase {
 		$this->table = 'flow';
 		$this->PlanTable = 'plan';
 	}
-	public function GetPlan(/*$arr*/){
+	public function GetFlow(/*$arr*/){
 		$flow = $this->Assoc($this->table,'*',"user_id = '".$_SESSION['UserId']."'",'in_date asc');
 		$plan = $this->Assoc($this->PlanTable,'*',"user_id = '".$_SESSION['UserId']."'",'in_date asc');
 		$count = 0;
@@ -32,15 +32,29 @@ class ModelPlan  extends LibDataBase {
 		}
 		return $re;
 	}
+	public function GetPlan(){
+		$re = $this->Assoc($this->PlanTable,'*','','in_date asc');
+		foreach($re as $key => $value){
+			$re[$key]['date'] = $value['in_date'];
+			unset($re[$key]['in_date']);
+		}
+		return $re;
+	}
 	public function PlanAdd($arr){
 		if($arr['seq'] != ''){
 			$seq = $arr['seq'];
 			unset($arr['seq']);
+			$arr['in_date'] = $arr['date'];
+			unset($arr['date']);
 			$sql = $this->Up($this->PlanTable,$arr,"seq = '$seq'");
 		}else{
 			unset($arr['seq']);
+			$arr['in_date'] = $arr['date'];
+			unset($arr['date']);
+			$arr['user_id']=$_SESSION['UserId'];
 			$sql = $this->In($this->PlanTable, $arr);
 		}
 		echo $sql;
+		$this->Query($sql);
 	}
 }
