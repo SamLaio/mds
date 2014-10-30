@@ -1,6 +1,7 @@
 <script>
 var planArr = new Array();
 $(window).ready(function(){
+	$('#PlanEditMain').hide();
 	$.post('<?php echo $_SESSION['SiteUrl']; ?>cgi/plan/GetPlan',function(e){
 		planArr = e;
 		getPlan(planArr);
@@ -9,20 +10,87 @@ $(window).ready(function(){
 		if (e.which == 27)
 			$(this).val('All');
 	});
+	$("#PlanAddDate").datepicker(datepickerDef).on("keydown", function (e) {
+		if (e.which == 27)
+			$(this).val('');
+	});
 	$("#PlanSet").on("click", function () {
-		//alert(planArr);
-		
+		var re = new Array();
+		var tmp;
+		for(var i = 0; i < planArr.length; i++){
+			tmp = false;
+			if($('#s_date').val() != 'All' && $('#e_date').val() != 'All'){
+				if($('#s_date').val() <= planArr[i].date && $('#e_date').val() >= planArr[i].date){
+					tmp = true;
+				}
+			}
+			
+			if($('#s_date').val() == 'All' && $('#e_date').val() != 'All'){
+				if($('#e_date').val() >= planArr[i].date){
+					tmp = true;
+				}
+			}
+			
+			if($('#s_date').val() != 'All' && $('#e_date').val() == 'All'){
+				if($('#s_date').val() <= planArr[i].date){
+					tmp = true;
+				}
+			}
+			
+			if($('#s_date').val() == 'All' && $('#e_date').val() == 'All'){
+				re = planArr;
+			}
+			
+			if(tmp)
+				re[re.length] = planArr[i];
+		}
+		getPlan(re);
+	});
+	$('#PlanAdd').on('click',function(){
+		$('#PlanEditMain').show();
+	});
+	$('#PlanClose').on('click',function(){
+		setPlan();
+	});
+	$('#PlanSubmit').on('click', function(){
+		if($('#PlanAddDate').val() != '' && $('#PlanAddDate').val() != ''){
+			$.post('<?php echo $_SESSION['SiteUrl']; ?>cgi/plan/PlanAdd',
+				{
+					'PlanAddSeq':$('#PlanAddSeq').val(),
+					'PlanAddDate':$('#PlanAddDate').val(),
+					'PlanAddEarnings':$('#PlanAddEarnings').val()
+				},function(e){
+					
+				}
+			);
+		}else{
+			alert('error');
+		}
 	});
 });
+function setPlan(){
+	$('#PlanEditMain input').val('');
+	$('#PlanEditMain').hide();
+}
+function editPlan(id){
+	for(var i =0; i < planArr.length; i++){
+		if(planArr[i].seq == id){
+			$('#PlanAddSeq').val(id);
+			$('#PlanAddDate').val(planArr[i].date);
+			$('#PlanAddEarnings').val(planArr[i].earnings);
+			$('#PlanEditMain').show();
+		}
+	}
+}
 function getPlan(arr){
 	tabledata = '';
 	for(var i = 0; i < arr.length; i ++){
 		var color = " style = 'color:#0000ff;'";
 		if(arr[i].de != '' || (arr[i].earnings+arr[i].count) < 0)
 			color = " style = 'color:#ff0000;'";
-		tabledata += '<tr'+color+'><td>'+arr[i].date+'</td><td>'+arr[i].add+'</td><td>'+arr[i].de+'</td><td>'+arr[i].earnings+'</td><td>'+arr[i].count+'</td></tr>';
+		tabledata += '<tr'+color+'><td>'+arr[i].date+'</td><td>'+arr[i].add+'</td><td>'+arr[i].de+'</td><td>'+arr[i].earnings+'</td><td>'+arr[i].count+'</td><td>[<span class = \'link\' onclick = \'editPlan('+arr[i].seq+')\'>edit</span>]</td></tr>';
 	}
-	$('#PlanMain').html("<table id ='PlanTable'><thead><tr><td>date</td><td>add</td><td>de</td><td>earnings</td><td>count</td></tr></thead><tbody>"+tabledata+'</tbody></table>');
+	$('#PlanMain').html("<table id ='PlanTable'><thead><tr><td>date</td><td>add</td><td>de</td><td>earnings</td><td>count</td><td>tool</td></tr></thead><tbody>"+tabledata+'</tbody></table>');
 	$("#PlanTable").dataTable(dataTableDef);
 }
 </script>
@@ -30,22 +98,14 @@ function getPlan(arr){
 <span class = 'Lang_EndDate'></span><input type = 'text' id = 'e_date' value = 'All' />
 [<span class='link' id = 'PlanSet'><span>Set</span></span>]
 [<span class='link' id = 'PlanAdd'><span>Add</span></span>]
-<!--<div id = 'PlanEditMain' style = 'position: absolute;top: 20%;left: 35%;width: 30%;z-index: 3000;background-color: #efefef;text-align:center;'>
+<div id = 'PlanEditMain' style = 'position: absolute;top: 20%;left: 35%;width: 30%;z-index: 3000;background-color: #efefef;text-align:center;'>
 	<div style = 'text-align:left;width:98%;margin:1%;text-align:center;'>
 		<input type = 'hidden' id = 'PlanAddSeq' />
 		<input type = 'text' id = 'PlanAddDate' />
-		<select id = 'PlanAddType'>
-			<option value = '+'>+</option>
-			<option value = '-'>-</option>
-		</select>
-		<input type = 'number' id = 'PlanAddAmount' />
-		<select id = 'PlanAddClass_1'></select>
-		<input type = 'text' id = 'PlanAddClass_2' />
-		
-		<input type = 'text' id = 'PlanAddNote' />
+		<input type = 'number' id = 'PlanAddEarnings' />
 	</div>
 	[<span class = 'link' id = 'PlanSubmit'>Submit</span>]
 	[<span class = 'link' id = 'PlanClose'>Close</span>]
-</div>-->
+</div>
 <div id = 'PlanMain'>
 </div>
